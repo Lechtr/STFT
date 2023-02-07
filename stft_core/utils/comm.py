@@ -40,6 +40,10 @@ def synchronize():
     if not dist.is_initialized():
         return
     world_size = dist.get_world_size()
+    
+    print("comm.py, world_size: ", world_size)
+    
+    
     if world_size == 1:
         return
     dist.barrier()

@@ -34,7 +34,7 @@ class CVCVIDImageDataset(torch.utils.data.Dataset):
 
         self.is_train = is_train
 
-        self._img_dir = os.path.join(self.img_dir, "%s.png")
+        self._img_dir = os.path.join(self.img_dir, "%s.jpg")
         self._anno_path = os.path.join(self.anno_path, "%s.xml")
 
         with open(self.img_index) as f:

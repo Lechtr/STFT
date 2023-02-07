@@ -11,10 +11,11 @@ class CVCVIDSTFTDataset(CVCVIDImageDataset):
             transforms=transforms, is_train=is_train)
         if not self.is_train:
             self.start_index = []
+            # print("cvcid_stft.py frame_id: ", self.frame_id)
             for id, frame_id in enumerate(self.frame_id):
                 if frame_id == 1:
                     self.start_index.append(id)
-            print('test, video start_index:', self.start_index)
+            # print('test, video start_index:', self.start_index)
 
     def _get_train(self, idx):
         filename = self.image_set_index[idx]

@@ -84,12 +84,19 @@ class VIDTestDistributedSampler(Sampler):
             self.num_samples = int(math.ceil(len(self.dataset) * 1.0 / self.num_replicas)) #621
         else:
             self.num_samples = num_samples #
-        if len(self.dataset)<3000:
+        if len(self.dataset)<1: #3000:
+        
+            print("distributed.py rank: ", self.rank)
+            print("distributed.py self.dataset.start_index: ", self.dataset.start_index)
+        
             self.start = self.dataset.start_index[self.rank]
+            print("distributed.py self.start: ", self.start)
             if self.rank<3:
                 self.end = self.dataset.start_index[self.rank+1]
+                print("distributed.py self.end1: ", self.end)
             else:
                 self.end = len(self.dataset)
+                print("distributed.py self.end2: ", self.end)
         else:
             self.start = self.find_zero(self.rank * self.num_samples)
             self.end = self.find_zero((self.rank + 1) * self.num_samples)

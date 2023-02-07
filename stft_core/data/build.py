@@ -32,6 +32,10 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True, meth
     for dataset_name in dataset_list:
         data = dataset_catalog.get(dataset_name, method)
         
+        print(dataset_name)
+        print(dataset_catalog)
+        print(data)
+        
         factory = getattr(D, data["factory"])
         args = data["args"]
         if "VID" in data["factory"]:
@@ -159,6 +163,7 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0, is_
     # If bbox aug is enabled in testing, simply set transforms to None and we will apply transforms later
     transforms = None if not is_train and cfg.TEST.BBOX_AUG.ENABLED else build_transforms(cfg, is_train)
 
+    print("build.py dataset_list: ", dataset_list)
     datasets = build_dataset(dataset_list, transforms, DatasetCatalog, is_train, cfg.MODEL.VID.METHOD)
 
     if is_train:
@@ -167,6 +172,7 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0, is_
 
     data_loaders = []
     for dataset in datasets:
+        print("build.py dataset: ", dataset)
         sampler = make_data_sampler(dataset, shuffle, is_distributed, cfg.MODEL.VID.METHOD, is_train)
         batch_sampler = make_batch_data_sampler(
             dataset, sampler, aspect_grouping, images_per_gpu, num_iters, start_iter

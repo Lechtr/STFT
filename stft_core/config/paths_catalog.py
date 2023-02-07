@@ -44,7 +44,19 @@ class DatasetCatalog(object):
             "img_dir": "ASUVideo/Data",
             "anno_path": "ASUVideo/Annotations",
             "img_index": "ASUVideo/ImageSets/ASUVideo_val_videos.txt"
+        },
+        ####################### polyp SUN #######################
+        "sundatabase_stft_train_videos": {
+            "img_dir": "sundatabase_stft/Data",
+            "anno_path": "sundatabase_stft/Annotations",
+            "img_index": "sundatabase_stft/ImageSets/sundatabase_stft_train_videos.txt"
+        },
+        "sundatabase_stft_val_videos": {
+            "img_dir": "sundatabase_stft/Data",
+            "anno_path": "sundatabase_stft/Annotations",
+            "img_index": "sundatabase_stft/ImageSets/sundatabase_stft_val_videos.txt"
         }
+        
     }
 
     @staticmethod
@@ -61,7 +73,7 @@ class DatasetCatalog(object):
             "cvc_fgfa": "CVCVIDFGFADataset",
             "cvc_stft": "CVCVIDSTFTDataset"
         }
-        if ("DET" in name) or ("VID" in name) or ("Video" in name):
+        if ("DET" in name) or ("VID" in name) or ("Video" in name) or ("video" in name):
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(

@@ -129,6 +129,18 @@ def main():
 
     args = parser.parse_args()
 
+
+
+
+    print("train.py, WORLD_SIZE: ", os.environ["WORLD_SIZE"])
+    print(torch.cuda.is_available())
+    print(torch.cuda.device_count())
+    print(torch.cuda.get_device_name(0))
+    print(torch.cuda.current_device())
+    
+    
+    
+    
     num_gpus = int(os.environ["WORLD_SIZE"]) if "WORLD_SIZE" in os.environ else 1
     args.distributed = num_gpus > 1
 
