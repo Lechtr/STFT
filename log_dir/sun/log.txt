@@ -1,0 +1,1151 @@
+2022-02-27 13:59:24,817 stft_core INFO: Using 4 GPUs
+2022-02-27 13:59:24,817 stft_core INFO: Namespace(config_file='configs/STFT/sun.yaml', distributed=True, launcher='pytorch', local_rank=0, master_port='10000', opts=['OUTPUT_DIR', 'log_dir/sun'])
+2022-02-27 13:59:24,817 stft_core INFO: Collecting env info (might take some time)
+2022-02-27 13:59:28,389 stft_core INFO: 
+PyTorch version: 1.3.0
+Is debug build: No
+CUDA used to build PyTorch: 10.0.130
+
+OS: Ubuntu 20.04.1 LTS
+GCC version: (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0
+CMake version: version 3.16.3
+
+Python version: 3.7
+Is CUDA available: Yes
+CUDA runtime version: Could not collect
+GPU models and configuration: 
+GPU 0: Quadro RTX 8000
+GPU 1: Quadro RTX 8000
+GPU 2: Quadro RTX 8000
+GPU 3: Quadro RTX 8000
+
+Nvidia driver version: 470.103.01
+cuDNN version: Probably one of the following:
+/usr/lib/x86_64-linux-gnu/libcudnn.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_adv_infer.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_adv_train.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_cnn_infer.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_cnn_train.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_ops_infer.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_ops_train.so.8.0.5
+
+Versions of relevant libraries:
+[pip3] numpy==1.21.5
+[pip3] torch==1.3.0
+[pip3] torchvision==0.4.1a0+d94043a
+[conda] mkl                       2022.0.1           h06a4308_117    defaults
+[conda] pytorch                   1.3.0           py3.7_cuda10.0.130_cudnn7.6.3_0    pytorch
+[conda] torchvision               0.4.1                py37_cu100    pytorch
+        Pillow (6.2.2)
+2022-02-27 13:59:28,389 stft_core INFO: Loaded configuration file configs/STFT/sun.yaml
+2022-02-27 13:59:28,390 stft_core INFO: Running with config:
+AMP_VERBOSE: False
+DATALOADER:
+  ASPECT_RATIO_GROUPING: True
+  NUM_WORKERS: 4
+  SIZE_DIVISIBILITY: 0
+DATASETS:
+  TEST: ('sundatabase_stft_val_videos',)
+  TRAIN: ('sundatabase_stft_train_videos',)
+DTYPE: float32
+INPUT:
+  BRIGHTNESS: 0.0
+  CONTRAST: 0.0
+  HORIZONTAL_FLIP_PROB_TRAIN: 0.5
+  HUE: 0.0
+  MAX_SIZE_TEST: 1333
+  MAX_SIZE_TRAIN: 1333
+  MIN_SIZE_TEST: 800
+  MIN_SIZE_TRAIN: (800,)
+  PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  PIXEL_STD: [1.0, 1.0, 1.0]
+  SATURATION: 0.0
+  TO_BGR255: True
+  VERTICAL_FLIP_PROB_TRAIN: 0.0
+MODEL:
+  BACKBONE:
+    CONV_BODY: R-50-FPN-RETINANET
+    FREEZE_CONV_BODY_AT: 2
+    USE_GN: False
+  BORDER:
+    BBOX_STD: [0.5, 0.5, 0.5, 0.5]
+    IOU_THRESH: 0.6
+  BORDER_ON: False
+  CENTERNET:
+    CHANNEL_HM: 80
+    CHANNEL_OFFSET: 2
+    CHANNEL_WH: 2
+    FIX_RESIZE: False
+    HEAD_CONV: 64
+    INPUT_SCALE: 512
+    NUM_HEADS: 1
+    RAND_CROP: True
+    WEIGHT_HM: 1.0
+    WEIGHT_MASK: 0.1
+    WEIGHT_OFFSET: 1.0
+    WEIGHT_WH: 0.1
+  CLS_AGNOSTIC_BBOX_REG: False
+  DEVICE: cuda
+  FBNET:
+    ARCH: default
+    ARCH_DEF: 
+    BN_TYPE: bn
+    DET_HEAD_BLOCKS: []
+    DET_HEAD_LAST_SCALE: 1.0
+    DET_HEAD_STRIDE: 0
+    DW_CONV_SKIP_BN: True
+    DW_CONV_SKIP_RELU: True
+    KPTS_HEAD_BLOCKS: []
+    KPTS_HEAD_LAST_SCALE: 0.0
+    KPTS_HEAD_STRIDE: 0
+    MASK_HEAD_BLOCKS: []
+    MASK_HEAD_LAST_SCALE: 0.0
+    MASK_HEAD_STRIDE: 0
+    RPN_BN_TYPE: 
+    RPN_HEAD_BLOCKS: 0
+    SCALE_FACTOR: 1.0
+    WIDTH_DIVISOR: 1
+  FCOS:
+    CENTERNESS_ON_REG: True
+    CENTER_SAMPLING_RADIUS: 1.5
+    FPN_STRIDES: [8, 16, 32, 64, 128]
+    INFERENCE_TH: 0.05
+    IOU_LOSS_TYPE: giou
+    LOSS_ALPHA: 0.25
+    LOSS_GAMMA: 2.0
+    NMS_TH: 0.6
+    NORM_REG_TARGETS: True
+    NUM_CLASSES: 2
+    NUM_CONVS: 4
+    PRE_NMS_TOP_N: 1000
+    PRIOR_PROB: 0.01
+    USE_DCN_IN_TOWER: False
+  FCOS_ON: True
+  FPN:
+    USE_GN: False
+    USE_RELU: False
+  GROUP_NORM:
+    DIM_PER_GP: -1
+    EPSILON: 1e-05
+    NUM_GROUPS: 32
+  KEYPOINT_ON: False
+  MASK_ON: False
+  META_ARCHITECTURE: GeneralizedRCNNSTFT
+  RESNETS:
+    BACKBONE_OUT_CHANNELS: 256
+    DEFORMABLE_GROUPS: 1
+    GCB: 0.25
+    NUM_GROUPS: 1
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 2
+    STAGE_WITH_DCN: (False, True, True, True)
+    STAGE_WITH_GCB: (False, True, True, True)
+    STEM_FUNC: StemWithFixedBatchNorm
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: True
+    TRANS_FUNC: BottleneckWithFixedBatchNorm
+    WIDTH_PER_GROUP: 64
+    WITH_MODULATED_DCN: False
+  RETINANET:
+    ANCHOR_SIZES: (32, 64, 128, 256, 512)
+    ANCHOR_STRIDES: (8, 16, 32, 64, 128)
+    ASPECT_RATIOS: (0.5, 1.0, 2.0)
+    BBOX_REG_BETA: 0.11
+    BBOX_REG_WEIGHT: 4.0
+    BG_IOU_THRESHOLD: 0.4
+    FG_IOU_THRESHOLD: 0.5
+    INFERENCE_TH: 0.05
+    LOSS_ALPHA: 0.25
+    LOSS_GAMMA: 2.0
+    NMS_TH: 0.4
+    NUM_CLASSES: 81
+    NUM_CONVS: 4
+    OCTAVE: 2.0
+    PRE_NMS_TOP_N: 1000
+    PRIOR_PROB: 0.01
+    SCALES_PER_OCTAVE: 3
+    STRADDLE_THRESH: 0
+    USE_C5: False
+  RETINANET_ON: False
+  ROI_BOX_HEAD:
+    CONV_HEAD_DIM: 256
+    DILATION: 1
+    FEATURE_EXTRACTOR: ResNet50Conv5ROIFeatureExtractor
+    MLP_HEAD_DIM: 1024
+    NUM_CLASSES: 31
+    NUM_STACKED_CONVS: 4
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_SCALES: (0.0625,)
+    PREDICTOR: FastRCNNPredictor
+    USE_GN: False
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 128
+    BBOX_REG_WEIGHTS: (10.0, 10.0, 5.0, 5.0)
+    BG_IOU_THRESHOLD: 0.5
+    DETECTIONS_PER_IMG: 300
+    FG_IOU_THRESHOLD: 0.5
+    NMS: 0.5
+    POSITIVE_FRACTION: 0.25
+    REG_LOSS_DIV_POS: False
+    SCORE_THRESH: 0.001
+    USE_FPN: False
+  ROI_KEYPOINT_HEAD:
+    CONV_LAYERS: (512, 512, 512, 512, 512, 512, 512, 512)
+    FEATURE_EXTRACTOR: KeypointRCNNFeatureExtractor
+    MLP_HEAD_DIM: 1024
+    NUM_CLASSES: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_SCALES: (0.0625,)
+    PREDICTOR: KeypointRCNNPredictor
+    RESOLUTION: 14
+    SHARE_BOX_FEATURE_EXTRACTOR: True
+  ROI_MASK_HEAD:
+    CONV_LAYERS: (256, 256, 256, 256)
+    DILATION: 1
+    FEATURE_EXTRACTOR: ResNet50Conv5ROIFeatureExtractor
+    MLP_HEAD_DIM: 1024
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_SCALES: (0.0625,)
+    POSTPROCESS_MASKS: False
+    POSTPROCESS_MASKS_THRESHOLD: 0.5
+    PREDICTOR: MaskRCNNC4Predictor
+    RESOLUTION: 14
+    SHARE_BOX_FEATURE_EXTRACTOR: True
+    USE_GN: False
+  RPN:
+    ANCHOR_SIZES: (64, 128, 256, 512)
+    ANCHOR_STRIDE: (16,)
+    ASPECT_RATIOS: (0.5, 1.0, 2.0)
+    BATCH_SIZE_PER_IMAGE: 256
+    BG_IOU_THRESHOLD: 0.3
+    FG_IOU_THRESHOLD: 0.7
+    FPN_POST_NMS_PER_BATCH: True
+    FPN_POST_NMS_TOP_N_TEST: 2000
+    FPN_POST_NMS_TOP_N_TRAIN: 2000
+    MIN_SIZE: 0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOP_N_TEST: 300
+    POST_NMS_TOP_N_TRAIN: 300
+    PRE_NMS_TOP_N_TEST: 6000
+    PRE_NMS_TOP_N_TRAIN: 6000
+    REG_LOSS_DIV_POS: False
+    RPN_HEAD: SingleConvRPNHead
+    STRADDLE_THRESH: 0
+    USE_FPN: False
+  RPN_ONLY: True
+  STFT:
+    BBOX_STD: [0.5, 0.5, 0.5, 0.5]
+    IOU_THRESH: 0.1
+    OFFSET_WEIGHT_STD: 0.01
+    REG_BETA: 0.11
+  STFT_ON: True
+  USE_SYNCBN: False
+  VID:
+    DFF:
+      MAX_OFFSET: 0
+      MIN_OFFSET: -9
+    ENABLE: True
+    FGFA:
+      ALL_FRAME_INTERVAL: 19
+      KEY_FRAME_LOCATION: 9
+      MAX_OFFSET: 9
+      MIN_OFFSET: -9
+      REF_NUM: 2
+    FLOWNET_WEIGHT: pretrained_models/flownet.ckpt
+    IGNORE: False
+    MEGA:
+      ALL_FRAME_INTERVAL: 25
+      GLOBAL:
+        ENABLE: True
+        RES_STAGE: 1
+        SHUFFLE: True
+        SIZE: 10
+      KEY_FRAME_LOCATION: 12
+      MAX_OFFSET: 12
+      MEMORY:
+        ENABLE: True
+        SIZE: 25
+      MIN_OFFSET: -12
+      RATIO: 0.2
+      REF_NUM_GLOBAL: 2
+      REF_NUM_LOCAL: 2
+      REF_NUM_MEM: 3
+    METHOD: cvc_stft
+    RDN:
+      ALL_FRAME_INTERVAL: 37
+      KEY_FRAME_LOCATION: 18
+      MAX_OFFSET: 18
+      MIN_OFFSET: -18
+      RATIO: 0.2
+      REF_NUM: 2
+    ROI_BOX_HEAD:
+      ATTENTION:
+        ADVANCED_STAGE: 0
+        EMBED_DIM: 64
+        ENABLE: False
+        GROUP: 16
+        STAGE: 2
+      REDUCE_CHANNEL: False
+    RPN:
+      REF_POST_NMS_TOP_N: 75
+      REF_PRE_NMS_TOP_N: 6000
+    STFT:
+      MAX_OFFSET: 9
+      MIN_OFFSET: -9
+      TEST_REF_NUM: 10
+      TRAIN_REF_NUM: 2
+  WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
+OUTPUT_DIR: log_dir/sun
+PATHS_CATALOG: /home/krenzer_a/joshua/STFT/cocoapi/PythonAPI/STFT/stft_core/config/paths_catalog.py
+SOLVER:
+  BASE_LR: 0.01
+  BIAS_LR_FACTOR: 2
+  CHECKPOINT_PERIOD: 250
+  GAMMA: 0.5
+  IMS_PER_BATCH: 4
+  LR_TYPE: step
+  MAX_ITER: 15000
+  MIN_LR: 1e-07
+  MOMENTUM: 0.9
+  OPTIMIZER: sgd
+  STEPS: (0, 7500, 10000)
+  TEST_PERIOD: 125
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0
+TEST:
+  BBOX_AUG:
+    ENABLED: False
+    H_FLIP: False
+    MAX_SIZE: 4000
+    SCALES: ()
+    SCALE_H_FLIP: False
+  DETECTIONS_PER_IMG: 300
+  EXPECTED_RESULTS: []
+  EXPECTED_RESULTS_SIGMA_TOL: 4
+  IMS_PER_BATCH: 4
+  VIS_THR: 0.55
+2022-02-27 13:59:28,394 stft_core INFO: Saving config into: log_dir/sun/config.yml
+2022-02-27 13:59:29,632 stft_core INFO: 
+model:
+GeneralizedRCNNSTFT(
+  (backbone): Sequential(
+    (body): ResNet(
+      (stem): StemWithFixedBatchNorm(
+        (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        (bn1): FrozenBatchNorm2d()
+      )
+      (layer1): Sequential(
+        (0): BottleneckWithFixedBatchNorm(
+          (downsample): Sequential(
+            (0): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): FrozenBatchNorm2d()
+          )
+          (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+        )
+        (1): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+        )
+        (2): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(256, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(64, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+        )
+      )
+      (layer2): Sequential(
+        (0): BottleneckWithFixedBatchNorm(
+          (downsample): Sequential(
+            (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+            (1): FrozenBatchNorm2d()
+          )
+          (conv1): Conv2d(256, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(128, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=128, out_channels=128, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(512, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((128, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (1): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(128, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=128, out_channels=128, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(512, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((128, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (2): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(128, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=128, out_channels=128, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(512, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((128, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (3): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(128, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=128, out_channels=128, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(512, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(512, 128, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((128, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(128, 512, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+      )
+      (layer3): Sequential(
+        (0): BottleneckWithFixedBatchNorm(
+          (downsample): Sequential(
+            (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(2, 2), bias=False)
+            (1): FrozenBatchNorm2d()
+          )
+          (conv1): Conv2d(512, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(256, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(1024, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((256, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (1): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(256, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(1024, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((256, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (2): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(256, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(1024, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((256, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (3): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(256, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(1024, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((256, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (4): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(256, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(1024, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((256, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (5): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(256, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(1024, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((256, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(256, 1024, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+      )
+      (layer4): Sequential(
+        (0): BottleneckWithFixedBatchNorm(
+          (downsample): Sequential(
+            (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(2, 2), bias=False)
+            (1): FrozenBatchNorm2d()
+          )
+          (conv1): Conv2d(1024, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(512, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=512, out_channels=512, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(2048, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((512, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (1): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(512, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=512, out_channels=512, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(2048, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((512, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+        (2): BottleneckWithFixedBatchNorm(
+          (conv1): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): FrozenBatchNorm2d()
+          (conv2): DFConv2d(
+            (offset): Conv2d(512, 18, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (conv): DeformConv(in_channels=512, out_channels=512, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=1, bias=False)
+          )
+          (bn2): FrozenBatchNorm2d()
+          (conv3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn3): FrozenBatchNorm2d()
+          (context_block): ContextBlock(
+            (conv_mask): Conv2d(2048, 1, kernel_size=(1, 1), stride=(1, 1))
+            (softmax): Softmax(dim=2)
+            (channel_add_conv): Sequential(
+              (0): Conv2d(2048, 512, kernel_size=(1, 1), stride=(1, 1))
+              (1): LayerNorm((512, 1, 1), eps=1e-05, elementwise_affine=True)
+              (2): ReLU(inplace=True)
+              (3): Conv2d(512, 2048, kernel_size=(1, 1), stride=(1, 1))
+            )
+          )
+        )
+      )
+    )
+    (fpn): FPN(
+      (fpn_inner2): Conv2d(512, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_layer2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_inner3): Conv2d(1024, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_layer3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (fpn_inner4): Conv2d(2048, 256, kernel_size=(1, 1), stride=(1, 1))
+      (fpn_layer4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (top_blocks): LastLevelP6P7(
+        (p6): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (p7): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      )
+    )
+  )
+  (rpn): STFTFCOSModule(
+    (head): STFTFCOSHead(
+      (cls_tower): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (2): ReLU()
+        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (4): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (5): ReLU()
+        (6): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (7): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (8): ReLU()
+        (9): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (10): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (11): ReLU()
+      )
+      (bbox_tower): Sequential(
+        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (2): ReLU()
+        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (4): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (5): ReLU()
+        (6): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (7): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (8): ReLU()
+        (9): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (10): GroupNorm(32, 256, eps=1e-05, affine=True)
+        (11): ReLU()
+      )
+      (cls_logits): Conv2d(256, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bbox_pred): Conv2d(256, 4, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (centerness): Conv2d(256, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (dcn_cls_subnet): SFTBranch(
+        (conv_offset): Conv2d(4, 72, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (conv_adaption): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=4, bias=False)
+        (relu): ReLU(inplace=True)
+      )
+      (dcn_bbox_subnet): SFTBranch(
+        (conv_offset): Conv2d(4, 72, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (conv_adaption): DeformConv(in_channels=256, out_channels=256, kernel_size=(3, 3), stride=(1, 1), dilation=(1, 1), padding=(1, 1), groups=1, deformable_groups=4, bias=False)
+        (relu): ReLU(inplace=True)
+      )
+      (dcn_cls_score): Conv2d(256, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (dcn_bbox_pred): Conv2d(256, 4, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (scales): ModuleList(
+        (0): Scale()
+        (1): Scale()
+        (2): Scale()
+        (3): Scale()
+        (4): Scale()
+      )
+    )
+    (box_selector_test): STFTFCOSPostProcessor()
+  )
+)
+2022-02-27 13:59:29,667 stft_core.utils.checkpoint INFO: Loading checkpoint from catalog://ImageNetPretrained/MSRA/R-50
+2022-02-27 13:59:29,668 stft_core.utils.checkpoint INFO: catalog://ImageNetPretrained/MSRA/R-50 points to https://dl.fbaipublicfiles.com/detectron/ImageNetPretrained/MSRA/R-50.pkl
+2022-02-27 13:59:29,922 stft_core.utils.checkpoint INFO: url https://dl.fbaipublicfiles.com/detectron/ImageNetPretrained/MSRA/R-50.pkl cached in /home/krenzer_a/.torch/models/R-50.pkl
+2022-02-27 13:59:30,156 stft_core.utils.c2_model_loading INFO: Remapping C2 weights
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: conv1_b              mapped name: conv1.bias
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: conv1_w              mapped name: conv1.weight
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: fc1000_b             mapped name: fc1000.bias
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: fc1000_w             mapped name: fc1000.weight
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_b     mapped name: layer1.0.downsample.0.bias
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_bn_b  mapped name: layer1.0.downsample.1.bias
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_bn_s  mapped name: layer1.0.downsample.1.weight
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch1_w     mapped name: layer1.0.downsample.0.weight
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_b    mapped name: layer1.0.conv1.bias
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_bn_b mapped name: layer1.0.bn1.bias
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_bn_s mapped name: layer1.0.bn1.weight
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2a_w    mapped name: layer1.0.conv1.weight
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_b    mapped name: layer1.0.conv2.bias
+2022-02-27 13:59:30,157 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_bn_b mapped name: layer1.0.bn2.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_bn_s mapped name: layer1.0.bn2.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2b_w    mapped name: layer1.0.conv2.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_b    mapped name: layer1.0.conv3.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_bn_b mapped name: layer1.0.bn3.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_bn_s mapped name: layer1.0.bn3.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_0_branch2c_w    mapped name: layer1.0.conv3.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_b    mapped name: layer1.1.conv1.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_bn_b mapped name: layer1.1.bn1.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_bn_s mapped name: layer1.1.bn1.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2a_w    mapped name: layer1.1.conv1.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_b    mapped name: layer1.1.conv2.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_bn_b mapped name: layer1.1.bn2.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_bn_s mapped name: layer1.1.bn2.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2b_w    mapped name: layer1.1.conv2.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_b    mapped name: layer1.1.conv3.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_bn_b mapped name: layer1.1.bn3.bias
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_bn_s mapped name: layer1.1.bn3.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_1_branch2c_w    mapped name: layer1.1.conv3.weight
+2022-02-27 13:59:30,158 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_b    mapped name: layer1.2.conv1.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_bn_b mapped name: layer1.2.bn1.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_bn_s mapped name: layer1.2.bn1.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2a_w    mapped name: layer1.2.conv1.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_b    mapped name: layer1.2.conv2.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_bn_b mapped name: layer1.2.bn2.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_bn_s mapped name: layer1.2.bn2.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2b_w    mapped name: layer1.2.conv2.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_b    mapped name: layer1.2.conv3.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_bn_b mapped name: layer1.2.bn3.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_bn_s mapped name: layer1.2.bn3.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res2_2_branch2c_w    mapped name: layer1.2.conv3.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_b     mapped name: layer2.0.downsample.0.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_bn_b  mapped name: layer2.0.downsample.1.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_bn_s  mapped name: layer2.0.downsample.1.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch1_w     mapped name: layer2.0.downsample.0.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_b    mapped name: layer2.0.conv1.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_bn_b mapped name: layer2.0.bn1.bias
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_bn_s mapped name: layer2.0.bn1.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2a_w    mapped name: layer2.0.conv1.weight
+2022-02-27 13:59:30,159 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_b    mapped name: layer2.0.conv2.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_bn_b mapped name: layer2.0.bn2.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_bn_s mapped name: layer2.0.bn2.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2b_w    mapped name: layer2.0.conv2.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_b    mapped name: layer2.0.conv3.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_bn_b mapped name: layer2.0.bn3.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_bn_s mapped name: layer2.0.bn3.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_0_branch2c_w    mapped name: layer2.0.conv3.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_b    mapped name: layer2.1.conv1.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_bn_b mapped name: layer2.1.bn1.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_bn_s mapped name: layer2.1.bn1.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2a_w    mapped name: layer2.1.conv1.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_b    mapped name: layer2.1.conv2.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_bn_b mapped name: layer2.1.bn2.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_bn_s mapped name: layer2.1.bn2.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2b_w    mapped name: layer2.1.conv2.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_b    mapped name: layer2.1.conv3.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_bn_b mapped name: layer2.1.bn3.bias
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_bn_s mapped name: layer2.1.bn3.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_1_branch2c_w    mapped name: layer2.1.conv3.weight
+2022-02-27 13:59:30,160 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_b    mapped name: layer2.2.conv1.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_bn_b mapped name: layer2.2.bn1.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_bn_s mapped name: layer2.2.bn1.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2a_w    mapped name: layer2.2.conv1.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_b    mapped name: layer2.2.conv2.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_bn_b mapped name: layer2.2.bn2.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_bn_s mapped name: layer2.2.bn2.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2b_w    mapped name: layer2.2.conv2.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_b    mapped name: layer2.2.conv3.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_bn_b mapped name: layer2.2.bn3.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_bn_s mapped name: layer2.2.bn3.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_2_branch2c_w    mapped name: layer2.2.conv3.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_b    mapped name: layer2.3.conv1.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_bn_b mapped name: layer2.3.bn1.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_bn_s mapped name: layer2.3.bn1.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2a_w    mapped name: layer2.3.conv1.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_b    mapped name: layer2.3.conv2.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_bn_b mapped name: layer2.3.bn2.bias
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_bn_s mapped name: layer2.3.bn2.weight
+2022-02-27 13:59:30,161 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2b_w    mapped name: layer2.3.conv2.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_b    mapped name: layer2.3.conv3.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_bn_b mapped name: layer2.3.bn3.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_bn_s mapped name: layer2.3.bn3.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res3_3_branch2c_w    mapped name: layer2.3.conv3.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_b     mapped name: layer3.0.downsample.0.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_bn_b  mapped name: layer3.0.downsample.1.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_bn_s  mapped name: layer3.0.downsample.1.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch1_w     mapped name: layer3.0.downsample.0.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_b    mapped name: layer3.0.conv1.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_bn_b mapped name: layer3.0.bn1.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_bn_s mapped name: layer3.0.bn1.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2a_w    mapped name: layer3.0.conv1.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_b    mapped name: layer3.0.conv2.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_bn_b mapped name: layer3.0.bn2.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_bn_s mapped name: layer3.0.bn2.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2b_w    mapped name: layer3.0.conv2.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_b    mapped name: layer3.0.conv3.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_bn_b mapped name: layer3.0.bn3.bias
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_bn_s mapped name: layer3.0.bn3.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_0_branch2c_w    mapped name: layer3.0.conv3.weight
+2022-02-27 13:59:30,162 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_b    mapped name: layer3.1.conv1.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_bn_b mapped name: layer3.1.bn1.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_bn_s mapped name: layer3.1.bn1.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2a_w    mapped name: layer3.1.conv1.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_b    mapped name: layer3.1.conv2.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_bn_b mapped name: layer3.1.bn2.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_bn_s mapped name: layer3.1.bn2.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2b_w    mapped name: layer3.1.conv2.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_b    mapped name: layer3.1.conv3.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_bn_b mapped name: layer3.1.bn3.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_bn_s mapped name: layer3.1.bn3.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_1_branch2c_w    mapped name: layer3.1.conv3.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_b    mapped name: layer3.2.conv1.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_bn_b mapped name: layer3.2.bn1.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_bn_s mapped name: layer3.2.bn1.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2a_w    mapped name: layer3.2.conv1.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_b    mapped name: layer3.2.conv2.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_bn_b mapped name: layer3.2.bn2.bias
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_bn_s mapped name: layer3.2.bn2.weight
+2022-02-27 13:59:30,163 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2b_w    mapped name: layer3.2.conv2.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_b    mapped name: layer3.2.conv3.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_bn_b mapped name: layer3.2.bn3.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_bn_s mapped name: layer3.2.bn3.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_2_branch2c_w    mapped name: layer3.2.conv3.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_b    mapped name: layer3.3.conv1.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_bn_b mapped name: layer3.3.bn1.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_bn_s mapped name: layer3.3.bn1.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2a_w    mapped name: layer3.3.conv1.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_b    mapped name: layer3.3.conv2.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_bn_b mapped name: layer3.3.bn2.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_bn_s mapped name: layer3.3.bn2.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2b_w    mapped name: layer3.3.conv2.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_b    mapped name: layer3.3.conv3.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_bn_b mapped name: layer3.3.bn3.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_bn_s mapped name: layer3.3.bn3.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_3_branch2c_w    mapped name: layer3.3.conv3.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_b    mapped name: layer3.4.conv1.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_bn_b mapped name: layer3.4.bn1.bias
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_bn_s mapped name: layer3.4.bn1.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2a_w    mapped name: layer3.4.conv1.weight
+2022-02-27 13:59:30,164 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_b    mapped name: layer3.4.conv2.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_bn_b mapped name: layer3.4.bn2.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_bn_s mapped name: layer3.4.bn2.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2b_w    mapped name: layer3.4.conv2.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_b    mapped name: layer3.4.conv3.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_bn_b mapped name: layer3.4.bn3.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_bn_s mapped name: layer3.4.bn3.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_4_branch2c_w    mapped name: layer3.4.conv3.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_b    mapped name: layer3.5.conv1.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_bn_b mapped name: layer3.5.bn1.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_bn_s mapped name: layer3.5.bn1.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2a_w    mapped name: layer3.5.conv1.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_b    mapped name: layer3.5.conv2.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_bn_b mapped name: layer3.5.bn2.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_bn_s mapped name: layer3.5.bn2.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2b_w    mapped name: layer3.5.conv2.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_b    mapped name: layer3.5.conv3.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_bn_b mapped name: layer3.5.bn3.bias
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_bn_s mapped name: layer3.5.bn3.weight
+2022-02-27 13:59:30,165 stft_core.utils.c2_model_loading INFO: C2 name: res4_5_branch2c_w    mapped name: layer3.5.conv3.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_b     mapped name: layer4.0.downsample.0.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_bn_b  mapped name: layer4.0.downsample.1.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_bn_s  mapped name: layer4.0.downsample.1.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch1_w     mapped name: layer4.0.downsample.0.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_b    mapped name: layer4.0.conv1.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_bn_b mapped name: layer4.0.bn1.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_bn_s mapped name: layer4.0.bn1.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2a_w    mapped name: layer4.0.conv1.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_b    mapped name: layer4.0.conv2.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_bn_b mapped name: layer4.0.bn2.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_bn_s mapped name: layer4.0.bn2.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2b_w    mapped name: layer4.0.conv2.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_b    mapped name: layer4.0.conv3.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_bn_b mapped name: layer4.0.bn3.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_bn_s mapped name: layer4.0.bn3.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_0_branch2c_w    mapped name: layer4.0.conv3.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_b    mapped name: layer4.1.conv1.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_bn_b mapped name: layer4.1.bn1.bias
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_bn_s mapped name: layer4.1.bn1.weight
+2022-02-27 13:59:30,166 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2a_w    mapped name: layer4.1.conv1.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_b    mapped name: layer4.1.conv2.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_bn_b mapped name: layer4.1.bn2.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_bn_s mapped name: layer4.1.bn2.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2b_w    mapped name: layer4.1.conv2.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_b    mapped name: layer4.1.conv3.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_bn_b mapped name: layer4.1.bn3.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_bn_s mapped name: layer4.1.bn3.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_1_branch2c_w    mapped name: layer4.1.conv3.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_b    mapped name: layer4.2.conv1.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_bn_b mapped name: layer4.2.bn1.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_bn_s mapped name: layer4.2.bn1.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2a_w    mapped name: layer4.2.conv1.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_b    mapped name: layer4.2.conv2.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_bn_b mapped name: layer4.2.bn2.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_bn_s mapped name: layer4.2.bn2.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2b_w    mapped name: layer4.2.conv2.weight
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_b    mapped name: layer4.2.conv3.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_bn_b mapped name: layer4.2.bn3.bias
+2022-02-27 13:59:30,167 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_bn_s mapped name: layer4.2.bn3.weight
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: C2 name: res5_2_branch2c_w    mapped name: layer4.2.conv3.weight
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: C2 name: res_conv1_bn_b       mapped name: bn1.bias
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: C2 name: res_conv1_bn_s       mapped name: bn1.weight
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: Remapping conv weights for deformable conv weights
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.0.conv2.bias, new_key: layer2.0.conv2.conv.bias
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.0.conv2.weight, new_key: layer2.0.conv2.conv.weight
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.1.conv2.bias, new_key: layer2.1.conv2.conv.bias
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.1.conv2.weight, new_key: layer2.1.conv2.conv.weight
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.2.conv2.bias, new_key: layer2.2.conv2.conv.bias
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.2.conv2.weight, new_key: layer2.2.conv2.conv.weight
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.3.conv2.bias, new_key: layer2.3.conv2.conv.bias
+2022-02-27 13:59:30,168 stft_core.utils.c2_model_loading INFO: pattern: .*layer2.*conv2.*, old_key: layer2.3.conv2.weight, new_key: layer2.3.conv2.conv.weight
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.0.conv2.bias, new_key: layer3.0.conv2.conv.bias
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.0.conv2.weight, new_key: layer3.0.conv2.conv.weight
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.1.conv2.bias, new_key: layer3.1.conv2.conv.bias
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.1.conv2.weight, new_key: layer3.1.conv2.conv.weight
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.2.conv2.bias, new_key: layer3.2.conv2.conv.bias
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.2.conv2.weight, new_key: layer3.2.conv2.conv.weight
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.3.conv2.bias, new_key: layer3.3.conv2.conv.bias
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.3.conv2.weight, new_key: layer3.3.conv2.conv.weight
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.4.conv2.bias, new_key: layer3.4.conv2.conv.bias
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.4.conv2.weight, new_key: layer3.4.conv2.conv.weight
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.5.conv2.bias, new_key: layer3.5.conv2.conv.bias
+2022-02-27 13:59:30,169 stft_core.utils.c2_model_loading INFO: pattern: .*layer3.*conv2.*, old_key: layer3.5.conv2.weight, new_key: layer3.5.conv2.conv.weight
+2022-02-27 13:59:30,170 stft_core.utils.c2_model_loading INFO: pattern: .*layer4.*conv2.*, old_key: layer4.0.conv2.bias, new_key: layer4.0.conv2.conv.bias
+2022-02-27 13:59:30,170 stft_core.utils.c2_model_loading INFO: pattern: .*layer4.*conv2.*, old_key: layer4.0.conv2.weight, new_key: layer4.0.conv2.conv.weight
+2022-02-27 13:59:30,170 stft_core.utils.c2_model_loading INFO: pattern: .*layer4.*conv2.*, old_key: layer4.1.conv2.bias, new_key: layer4.1.conv2.conv.bias
+2022-02-27 13:59:30,170 stft_core.utils.c2_model_loading INFO: pattern: .*layer4.*conv2.*, old_key: layer4.1.conv2.weight, new_key: layer4.1.conv2.conv.weight
+2022-02-27 13:59:30,170 stft_core.utils.c2_model_loading INFO: pattern: .*layer4.*conv2.*, old_key: layer4.2.conv2.bias, new_key: layer4.2.conv2.conv.bias
+2022-02-27 13:59:30,170 stft_core.utils.c2_model_loading INFO: pattern: .*layer4.*conv2.*, old_key: layer4.2.conv2.weight, new_key: layer4.2.conv2.conv.weight
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.bn1.bias                                loaded from layer1.0.bn1.bias            of shape (64,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.bn1.weight                              loaded from layer1.0.bn1.weight          of shape (64,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.bn2.bias                                loaded from layer1.0.bn2.bias            of shape (64,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.bn2.weight                              loaded from layer1.0.bn2.weight          of shape (64,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.bn3.bias                                loaded from layer1.0.bn3.bias            of shape (256,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.bn3.weight                              loaded from layer1.0.bn3.weight          of shape (256,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.conv1.weight                            loaded from layer1.0.conv1.weight        of shape (64, 64, 1, 1)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.conv2.weight                            loaded from layer1.0.conv2.weight        of shape (64, 64, 3, 3)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.conv3.weight                            loaded from layer1.0.conv3.weight        of shape (256, 64, 1, 1)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.downsample.0.weight                     loaded from layer1.0.downsample.0.weight of shape (256, 64, 1, 1)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.downsample.1.bias                       loaded from layer1.0.downsample.1.bias   of shape (256,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.0.downsample.1.weight                     loaded from layer1.0.downsample.1.weight of shape (256,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.bn1.bias                                loaded from layer1.1.bn1.bias            of shape (64,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.bn1.weight                              loaded from layer1.1.bn1.weight          of shape (64,)
+2022-02-27 13:59:30,184 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.bn2.bias                                loaded from layer1.1.bn2.bias            of shape (64,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.bn2.weight                              loaded from layer1.1.bn2.weight          of shape (64,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.bn3.bias                                loaded from layer1.1.bn3.bias            of shape (256,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.bn3.weight                              loaded from layer1.1.bn3.weight          of shape (256,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.conv1.weight                            loaded from layer1.1.conv1.weight        of shape (64, 256, 1, 1)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.conv2.weight                            loaded from layer1.1.conv2.weight        of shape (64, 64, 3, 3)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.1.conv3.weight                            loaded from layer1.1.conv3.weight        of shape (256, 64, 1, 1)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.bn1.bias                                loaded from layer1.2.bn1.bias            of shape (64,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.bn1.weight                              loaded from layer1.2.bn1.weight          of shape (64,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.bn2.bias                                loaded from layer1.2.bn2.bias            of shape (64,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.bn2.weight                              loaded from layer1.2.bn2.weight          of shape (64,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.bn3.bias                                loaded from layer1.2.bn3.bias            of shape (256,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.bn3.weight                              loaded from layer1.2.bn3.weight          of shape (256,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.conv1.weight                            loaded from layer1.2.conv1.weight        of shape (64, 256, 1, 1)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.conv2.weight                            loaded from layer1.2.conv2.weight        of shape (64, 64, 3, 3)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer1.2.conv3.weight                            loaded from layer1.2.conv3.weight        of shape (256, 64, 1, 1)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.bn1.bias                                loaded from layer2.0.bn1.bias            of shape (128,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.bn1.weight                              loaded from layer2.0.bn1.weight          of shape (128,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.bn2.bias                                loaded from layer2.0.bn2.bias            of shape (128,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.bn2.weight                              loaded from layer2.0.bn2.weight          of shape (128,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.bn3.bias                                loaded from layer2.0.bn3.bias            of shape (512,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.bn3.weight                              loaded from layer2.0.bn3.weight          of shape (512,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.conv1.weight                            loaded from layer2.0.conv1.weight        of shape (128, 256, 1, 1)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.conv2.conv.weight                       loaded from layer2.0.conv2.conv.weight   of shape (128, 128, 3, 3)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.conv3.weight                            loaded from layer2.0.conv3.weight        of shape (512, 128, 1, 1)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.downsample.0.weight                     loaded from layer2.0.downsample.0.weight of shape (512, 256, 1, 1)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.downsample.1.bias                       loaded from layer2.0.downsample.1.bias   of shape (512,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.0.downsample.1.weight                     loaded from layer2.0.downsample.1.weight of shape (512,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.bn1.bias                                loaded from layer2.1.bn1.bias            of shape (128,)
+2022-02-27 13:59:30,185 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.bn1.weight                              loaded from layer2.1.bn1.weight          of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.bn2.bias                                loaded from layer2.1.bn2.bias            of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.bn2.weight                              loaded from layer2.1.bn2.weight          of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.bn3.bias                                loaded from layer2.1.bn3.bias            of shape (512,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.bn3.weight                              loaded from layer2.1.bn3.weight          of shape (512,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.conv1.weight                            loaded from layer2.1.conv1.weight        of shape (128, 512, 1, 1)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.conv2.conv.weight                       loaded from layer2.1.conv2.conv.weight   of shape (128, 128, 3, 3)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.1.conv3.weight                            loaded from layer2.1.conv3.weight        of shape (512, 128, 1, 1)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.bn1.bias                                loaded from layer2.2.bn1.bias            of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.bn1.weight                              loaded from layer2.2.bn1.weight          of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.bn2.bias                                loaded from layer2.2.bn2.bias            of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.bn2.weight                              loaded from layer2.2.bn2.weight          of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.bn3.bias                                loaded from layer2.2.bn3.bias            of shape (512,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.bn3.weight                              loaded from layer2.2.bn3.weight          of shape (512,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.conv1.weight                            loaded from layer2.2.conv1.weight        of shape (128, 512, 1, 1)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.conv2.conv.weight                       loaded from layer2.2.conv2.conv.weight   of shape (128, 128, 3, 3)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.2.conv3.weight                            loaded from layer2.2.conv3.weight        of shape (512, 128, 1, 1)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.bn1.bias                                loaded from layer2.3.bn1.bias            of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.bn1.weight                              loaded from layer2.3.bn1.weight          of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.bn2.bias                                loaded from layer2.3.bn2.bias            of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.bn2.weight                              loaded from layer2.3.bn2.weight          of shape (128,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.bn3.bias                                loaded from layer2.3.bn3.bias            of shape (512,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.bn3.weight                              loaded from layer2.3.bn3.weight          of shape (512,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.conv1.weight                            loaded from layer2.3.conv1.weight        of shape (128, 512, 1, 1)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.conv2.conv.weight                       loaded from layer2.3.conv2.conv.weight   of shape (128, 128, 3, 3)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer2.3.conv3.weight                            loaded from layer2.3.conv3.weight        of shape (512, 128, 1, 1)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.bn1.bias                                loaded from layer3.0.bn1.bias            of shape (256,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.bn1.weight                              loaded from layer3.0.bn1.weight          of shape (256,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.bn2.bias                                loaded from layer3.0.bn2.bias            of shape (256,)
+2022-02-27 13:59:30,186 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.bn2.weight                              loaded from layer3.0.bn2.weight          of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.bn3.bias                                loaded from layer3.0.bn3.bias            of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.bn3.weight                              loaded from layer3.0.bn3.weight          of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.conv1.weight                            loaded from layer3.0.conv1.weight        of shape (256, 512, 1, 1)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.conv2.conv.weight                       loaded from layer3.0.conv2.conv.weight   of shape (256, 256, 3, 3)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.conv3.weight                            loaded from layer3.0.conv3.weight        of shape (1024, 256, 1, 1)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.downsample.0.weight                     loaded from layer3.0.downsample.0.weight of shape (1024, 512, 1, 1)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.downsample.1.bias                       loaded from layer3.0.downsample.1.bias   of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.0.downsample.1.weight                     loaded from layer3.0.downsample.1.weight of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.bn1.bias                                loaded from layer3.1.bn1.bias            of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.bn1.weight                              loaded from layer3.1.bn1.weight          of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.bn2.bias                                loaded from layer3.1.bn2.bias            of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.bn2.weight                              loaded from layer3.1.bn2.weight          of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.bn3.bias                                loaded from layer3.1.bn3.bias            of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.bn3.weight                              loaded from layer3.1.bn3.weight          of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.conv1.weight                            loaded from layer3.1.conv1.weight        of shape (256, 1024, 1, 1)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.conv2.conv.weight                       loaded from layer3.1.conv2.conv.weight   of shape (256, 256, 3, 3)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.1.conv3.weight                            loaded from layer3.1.conv3.weight        of shape (1024, 256, 1, 1)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.bn1.bias                                loaded from layer3.2.bn1.bias            of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.bn1.weight                              loaded from layer3.2.bn1.weight          of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.bn2.bias                                loaded from layer3.2.bn2.bias            of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.bn2.weight                              loaded from layer3.2.bn2.weight          of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.bn3.bias                                loaded from layer3.2.bn3.bias            of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.bn3.weight                              loaded from layer3.2.bn3.weight          of shape (1024,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.conv1.weight                            loaded from layer3.2.conv1.weight        of shape (256, 1024, 1, 1)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.conv2.conv.weight                       loaded from layer3.2.conv2.conv.weight   of shape (256, 256, 3, 3)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.2.conv3.weight                            loaded from layer3.2.conv3.weight        of shape (1024, 256, 1, 1)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.bn1.bias                                loaded from layer3.3.bn1.bias            of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.bn1.weight                              loaded from layer3.3.bn1.weight          of shape (256,)
+2022-02-27 13:59:30,187 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.bn2.bias                                loaded from layer3.3.bn2.bias            of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.bn2.weight                              loaded from layer3.3.bn2.weight          of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.bn3.bias                                loaded from layer3.3.bn3.bias            of shape (1024,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.bn3.weight                              loaded from layer3.3.bn3.weight          of shape (1024,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.conv1.weight                            loaded from layer3.3.conv1.weight        of shape (256, 1024, 1, 1)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.conv2.conv.weight                       loaded from layer3.3.conv2.conv.weight   of shape (256, 256, 3, 3)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.3.conv3.weight                            loaded from layer3.3.conv3.weight        of shape (1024, 256, 1, 1)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.bn1.bias                                loaded from layer3.4.bn1.bias            of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.bn1.weight                              loaded from layer3.4.bn1.weight          of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.bn2.bias                                loaded from layer3.4.bn2.bias            of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.bn2.weight                              loaded from layer3.4.bn2.weight          of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.bn3.bias                                loaded from layer3.4.bn3.bias            of shape (1024,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.bn3.weight                              loaded from layer3.4.bn3.weight          of shape (1024,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.conv1.weight                            loaded from layer3.4.conv1.weight        of shape (256, 1024, 1, 1)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.conv2.conv.weight                       loaded from layer3.4.conv2.conv.weight   of shape (256, 256, 3, 3)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.4.conv3.weight                            loaded from layer3.4.conv3.weight        of shape (1024, 256, 1, 1)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.bn1.bias                                loaded from layer3.5.bn1.bias            of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.bn1.weight                              loaded from layer3.5.bn1.weight          of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.bn2.bias                                loaded from layer3.5.bn2.bias            of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.bn2.weight                              loaded from layer3.5.bn2.weight          of shape (256,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.bn3.bias                                loaded from layer3.5.bn3.bias            of shape (1024,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.bn3.weight                              loaded from layer3.5.bn3.weight          of shape (1024,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.conv1.weight                            loaded from layer3.5.conv1.weight        of shape (256, 1024, 1, 1)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.conv2.conv.weight                       loaded from layer3.5.conv2.conv.weight   of shape (256, 256, 3, 3)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer3.5.conv3.weight                            loaded from layer3.5.conv3.weight        of shape (1024, 256, 1, 1)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.bn1.bias                                loaded from layer4.0.bn1.bias            of shape (512,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.bn1.weight                              loaded from layer4.0.bn1.weight          of shape (512,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.bn2.bias                                loaded from layer4.0.bn2.bias            of shape (512,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.bn2.weight                              loaded from layer4.0.bn2.weight          of shape (512,)
+2022-02-27 13:59:30,188 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.bn3.bias                                loaded from layer4.0.bn3.bias            of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.bn3.weight                              loaded from layer4.0.bn3.weight          of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.conv1.weight                            loaded from layer4.0.conv1.weight        of shape (512, 1024, 1, 1)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.conv2.conv.weight                       loaded from layer4.0.conv2.conv.weight   of shape (512, 512, 3, 3)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.conv3.weight                            loaded from layer4.0.conv3.weight        of shape (2048, 512, 1, 1)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.downsample.0.weight                     loaded from layer4.0.downsample.0.weight of shape (2048, 1024, 1, 1)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.downsample.1.bias                       loaded from layer4.0.downsample.1.bias   of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.0.downsample.1.weight                     loaded from layer4.0.downsample.1.weight of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.bn1.bias                                loaded from layer4.1.bn1.bias            of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.bn1.weight                              loaded from layer4.1.bn1.weight          of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.bn2.bias                                loaded from layer4.1.bn2.bias            of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.bn2.weight                              loaded from layer4.1.bn2.weight          of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.bn3.bias                                loaded from layer4.1.bn3.bias            of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.bn3.weight                              loaded from layer4.1.bn3.weight          of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.conv1.weight                            loaded from layer4.1.conv1.weight        of shape (512, 2048, 1, 1)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.conv2.conv.weight                       loaded from layer4.1.conv2.conv.weight   of shape (512, 512, 3, 3)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.1.conv3.weight                            loaded from layer4.1.conv3.weight        of shape (2048, 512, 1, 1)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.bn1.bias                                loaded from layer4.2.bn1.bias            of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.bn1.weight                              loaded from layer4.2.bn1.weight          of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.bn2.bias                                loaded from layer4.2.bn2.bias            of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.bn2.weight                              loaded from layer4.2.bn2.weight          of shape (512,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.bn3.bias                                loaded from layer4.2.bn3.bias            of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.bn3.weight                              loaded from layer4.2.bn3.weight          of shape (2048,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.conv1.weight                            loaded from layer4.2.conv1.weight        of shape (512, 2048, 1, 1)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.conv2.conv.weight                       loaded from layer4.2.conv2.conv.weight   of shape (512, 512, 3, 3)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.layer4.2.conv3.weight                            loaded from layer4.2.conv3.weight        of shape (2048, 512, 1, 1)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.stem.bn1.bias                                    loaded from bn1.bias                     of shape (64,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.stem.bn1.weight                                  loaded from bn1.weight                   of shape (64,)
+2022-02-27 13:59:30,189 stft_core.utils.model_serialization INFO: module.backbone.body.stem.conv1.weight                                loaded from conv1.weight                 of shape (64, 3, 7, 7)
+2022-02-27 13:59:30,569 stft_core INFO: 
+arguments:
+{'iteration': 0}
+2022-02-27 13:59:30,893 stft_core.utils.miscellaneous WARNING: Dataset [CVCVIDSTFTDataset] has no categories attribute, labels.json file won't be created
+2022-02-27 13:59:30,896 stft_core.trainer INFO: Start training
+2022-02-27 13:59:30,898 stft_core.trainer INFO: iou_types:('bbox',)
+
+2022-02-27 14:00:02,202 stft_core.trainer INFO: eta: 6:30:43  iter: 20  loss: 7.8788 (7.4691)  loss_centerness: 0.6393 (0.6392)  loss_cls: 1.3165 (1.4811)  loss_reg: 0.9901 (0.9474)  loss_stft_cls: 0.4462 (0.4751)  loss_stft_reg: 4.0240 (3.9263)  time: 1.5289 (1.5650)  data: 0.0020 (0.0275)  lr: 0.001800  max mem: 3891
+2022-02-27 14:00:32,608 stft_core.trainer INFO: eta: 6:24:38  iter: 40  loss: 7.9755 (8.4391)  loss_centerness: 0.6419 (0.6414)  loss_cls: 1.2774 (2.1710)  loss_reg: 0.5178 (0.7389)  loss_stft_cls: 1.1388 (0.8177)  loss_stft_reg: 4.1823 (4.0700)  time: 1.5238 (1.5427)  data: 0.0020 (0.0149)  lr: 0.001933  max mem: 3891
+2022-02-27 14:01:02,986 stft_core.trainer INFO: eta: 6:22:09  iter: 60  loss: 20.0289 (13.3486)  loss_centerness: 0.6441 (0.6415)  loss_cls: 13.6103 (6.9982)  loss_reg: 0.4827 (0.6548)  loss_stft_cls: 0.7763 (0.8895)  loss_stft_reg: 4.3489 (4.1646)  time: 1.5174 (1.5348)  data: 0.0019 (0.0106)  lr: 0.002067  max mem: 3891
+2022-02-27 14:01:32,867 stft_core.trainer INFO: eta: 6:19:06  iter: 80  loss: 11.9756 (13.7798)  loss_centerness: 0.6359 (0.6412)  loss_cls: 6.0101 (7.3723)  loss_reg: 0.4745 (0.6092)  loss_stft_cls: 1.1451 (0.9666)  loss_stft_reg: 4.2091 (4.1906)  time: 1.5010 (1.5246)  data: 0.0019 (0.0085)  lr: 0.002200  max mem: 3891
+2022-02-27 14:02:02,784 stft_core.trainer INFO: eta: 6:17:10  iter: 100  loss: 164.2549 (106.3946)  loss_centerness: 0.6437 (0.6419)  loss_cls: 110.1627 (28.8259)  loss_reg: 0.4339 (0.5772)  loss_stft_cls: 49.8033 (72.2058)  loss_stft_reg: 3.8869 (4.1439)  time: 1.5004 (1.5188)  data: 0.0019 (0.0072)  lr: 0.002333  max mem: 3891
+2022-02-27 14:02:32,213 stft_core.trainer INFO: eta: 6:14:42  iter: 120  loss: 9.6059 (125.1940)  loss_centerness: 0.6354 (0.6415)  loss_cls: 2.7312 (25.0078)  loss_reg: 0.4519 (0.5582)  loss_stft_cls: 1.6437 (94.8620)  loss_stft_reg: 4.0343 (4.1245)  time: 1.4777 (1.5109)  data: 0.0020 (0.0063)  lr: 0.002467  max mem: 3891
