@@ -36,7 +36,7 @@ class SFTBranch(nn.Module):
 
     def forward(self, feature, pred_shape):
         pred_shape = pred_shape.permute(0, 2, 1).reshape(feature.shape[0], -1, feature.shape[2], feature.shape[3])
-        offset = self.conv_offset(pred_shape.detach())
+        offset = self.conv_offset(pred_shape.detach().contiguous())
         feature = self.relu(self.conv_adaption(feature, offset))
         return feature
 
