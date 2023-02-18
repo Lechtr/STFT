@@ -13,6 +13,9 @@ from .cvcvid_image import CVCVIDImageDataset
 from .cvcvid_rdn import CVCVIDRDNDataset
 from .cvcvid_stft import CVCVIDSTFTDataset
 
+from .JF_cvcvid_image import JF_CVCVIDImageDataset
+from .JF_cvcvid_stft import JF_CVCVIDSTFTDataset
+
 __all__ = [
     "ConcatDataset",
     "VIDDataset",
@@ -24,5 +27,8 @@ __all__ = [
     "CVCVIDMEGADataset",
     "CVCVIDFGFADataset",
     "CVCVIDRDNDataset",
-    "CVCVIDSTFTDataset"
+    "CVCVIDSTFTDataset",
+
+    "JF_CVCVIDImageDataset",
+    "JF_CVCVIDSTFTDataset"
 ]
