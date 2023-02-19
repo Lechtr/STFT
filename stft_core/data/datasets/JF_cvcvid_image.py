@@ -60,19 +60,7 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
             self.frame_seg_id = [int(x[2]) for x in lines]
             self.frame_seg_len = [int(x[3]) for x in lines]
 
-        # if self.is_train:
-        #     keep = self.filter_annotation()
-        #
-        #     # filter the lists according to keep
-        #     if len(lines[0]) == 2:
-        #         self.image_set_index = [self.image_set_index[idx] for idx in range(len(keep)) if keep[idx]]
-        #         self.frame_id = [self.frame_id[idx] for idx in range(len(keep)) if keep[idx]]
-        #     else:
-        #         self.image_set_index = [self.image_set_index[idx] for idx in range(len(keep)) if keep[idx]]
-        #         self.pattern = [self.pattern[idx] for idx in range(len(keep)) if keep[idx]]
-        #         self.frame_id = [self.frame_id[idx] for idx in range(len(keep)) if keep[idx]]
-        #         self.frame_seg_id = [self.frame_seg_id[idx] for idx in range(len(keep)) if keep[idx]]
-        #         self.frame_seg_len = [self.frame_seg_len[idx] for idx in range(len(keep)) if keep[idx]]
+
 
         self.annos = self.load_annos(os.path.join(self.cache_dir, self.image_set + "_anno.pkl"))
 
@@ -118,37 +106,6 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
             os.mkdir(cache_dir)
         return cache_dir
 
-    # loads cache file if available
-    # creates a list of the images to be kept by looking for the object tags with a positive == 1
-    # => is not necessary, since all data in diagnosis contains a polyp, which is made sure through preprocessing
-    # def filter_annotation(self):
-    #     cache_file =os.path.join(self.cache_dir, self.image_set + "_keep.pkl")
-    #
-    #     if os.path.exists(cache_file):
-    #         with open(cache_file, "rb") as fid:
-    #             keep = pickle.load(fid)
-    #         if is_main_process():
-    #             print("{}'s keep information loaded from {}".format(self.det_vid, cache_file))
-    #         return keep
-    #
-    #     keep = np.zeros((len(self)), dtype=np.bool)
-    #     for idx in range(len(self)):
-    #         if idx % 1000 == 0:
-    #             print("Had filtered {} images".format(idx))
-    #
-    #         filename = self.image_set_index[idx]
-    #
-    #         tree = ET.parse(self._anno_path % filename).getroot()
-    #         objs = tree.findall("object")
-    #         keep[idx] = False if int(objs[0].find("positive").text) == 0 else True
-    #     print("Had filtered {} images".format(len(self)))
-    #
-    #     if is_main_process():
-    #         with open(cache_file, "wb") as fid:
-    #             pickle.dump(keep, fid)
-    #         print("Saving {}'s keep information into {}".format(self.det_vid, cache_file))
-    #
-    #     return keep
 
     # actually processes the annotation for each file
     # extracts the info from the xml and converts to array
