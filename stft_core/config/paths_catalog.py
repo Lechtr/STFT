@@ -45,16 +45,27 @@ class DatasetCatalog(object):
             "anno_path": "ASUVideo/Annotations",
             "img_index": "ASUVideo/ImageSets/ASUVideo_val_videos.txt"
         },
-        ####################### polyp SUN #######################
-        "sundatabase_stft_train_videos": {
-            "img_dir": "sundatabase_stft/Data",
-            "anno_path": "sundatabase_stft/Annotations",
-            "img_index": "sundatabase_stft/ImageSets/sundatabase_stft_train_videos.txt"
+        # ####################### polyp SUN #######################
+        # "sundatabase_stft_train_videos": {
+        #     "img_dir": "sundatabase_stft/Data",
+        #     "anno_path": "sundatabase_stft/Annotations",
+        #     "img_index": "sundatabase_stft/ImageSets/sundatabase_stft_train_videos.txt"
+        # },
+        # "sundatabase_stft_val_videos": {
+        #     "img_dir": "sundatabase_stft/Data",
+        #     "anno_path": "sundatabase_stft/Annotations",
+        #     "img_index": "sundatabase_stft/ImageSets/sundatabase_stft_val_videos.txt"
+        # }
+        ####################### SUN & KUMC #######################
+        "JF_SUN": {
+            "img_dir":   "SUN/Image",
+            "anno_path": "SUN/Annotation",
+            "img_index": "SUN/ImageSets/stft_dataloader_SUN_case1.txt"
         },
-        "sundatabase_stft_val_videos": {
-            "img_dir": "sundatabase_stft/Data",
-            "anno_path": "sundatabase_stft/Annotations",
-            "img_index": "sundatabase_stft/ImageSets/sundatabase_stft_val_videos.txt"
+        "JF_KUMC": {
+            "img_dir":   "KUMC/Image",
+            "anno_path": "KUMC/Annotation",
+            "img_index": "KUMC/ImageSets/stft_dataloader_KUMC.txt"
         }
         
     }
@@ -71,7 +82,9 @@ class DatasetCatalog(object):
             "cvc_rdn": "CVCVIDRDNDataset",
             "cvc_mega": "CVCVIDMEGADataset",
             "cvc_fgfa": "CVCVIDFGFADataset",
-            "cvc_stft": "CVCVIDSTFTDataset"
+            "cvc_stft": "CVCVIDSTFTDataset",
+            "JF_cvcvid_image": "JF_CVCVIDImageDataset",
+            "JF_cvcvid_stft": "JF_CVCVIDSTFTDataset"
         }
         if ("DET" in name) or ("VID" in name) or ("Video" in name) or ("video" in name):
             data_dir = DatasetCatalog.DATA_DIR
