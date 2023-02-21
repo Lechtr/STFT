@@ -18,7 +18,7 @@ class JF_CVCVIDSTFTDataset(JF_CVCVIDImageDataset):
             # print('test, video start_index:', self.start_index)
 
     def _get_train(self, idx):
-        filename = self.image_set_index[idx]
+        filename = self.frames_vidDir_and_filename[idx]
         img = Image.open(self._img_dir % filename).convert("RGB")
 
         # if a video dataset
@@ -27,13 +27,13 @@ class JF_CVCVIDSTFTDataset(JF_CVCVIDImageDataset):
             offsets = np.random.choice(-cfg.MODEL.VID.STFT.MIN_OFFSET, int(cfg.MODEL.VID.STFT.TRAIN_REF_NUM/2), replace=False) + cfg.MODEL.VID.STFT.MIN_OFFSET
             for i in range(len(offsets)):
                 ref_id = min(max(self.frame_seg_id[idx] + offsets[i], 1), self.frame_seg_len[idx])
-                ref_filename = self.pattern[idx] % ref_id
+                ref_filename = self.frames_vidDir_and_filename_pattern[idx] % ref_id
                 img_ref = Image.open(self._img_dir % ref_filename).convert("RGB")
                 img_refs.append(img_ref)
             offsets = np.random.choice(cfg.MODEL.VID.STFT.MAX_OFFSET, int(cfg.MODEL.VID.STFT.TRAIN_REF_NUM/2), replace=False) + 1
             for i in range(len(offsets)):
                 ref_id = min(max(self.frame_seg_id[idx] + offsets[i], 1), self.frame_seg_len[idx])
-                ref_filename = self.pattern[idx] % ref_id
+                ref_filename = self.frames_vidDir_and_filename_pattern[idx] % ref_id
                 img_ref = Image.open(self._img_dir % ref_filename).convert("RGB")
                 img_refs.append(img_ref)
         else:
@@ -56,7 +56,7 @@ class JF_CVCVIDSTFTDataset(JF_CVCVIDImageDataset):
         return images, target, idx
 
     def _get_test(self, idx):
-        filename = self.image_set_index[idx]
+        filename = self.frames_vidDir_and_filename[idx]
         img = Image.open(self._img_dir % filename).convert("RGB")
 
         # give the current frame a category. 0 for start, 1 for normal
@@ -67,7 +67,7 @@ class JF_CVCVIDSTFTDataset(JF_CVCVIDImageDataset):
         img_refs = []
         # reading other images of the queue (not necessary to be the last one, but last one here)
         ref_id = min(self.frame_seg_len[idx], self.frame_seg_id[idx] + cfg.MODEL.VID.STFT.MAX_OFFSET)
-        ref_filename = self.pattern[idx] % ref_id
+        ref_filename = self.frames_vidDir_and_filename_pattern[idx] % ref_id
         img_ref = Image.open(self._img_dir % ref_filename).convert("RGB")
         img_refs.append(img_ref)
 
@@ -84,7 +84,7 @@ class JF_CVCVIDSTFTDataset(JF_CVCVIDImageDataset):
         images["ref"] = img_refs
         images["frame_category"] = frame_category
         images["seg_len"] = self.frame_seg_len[idx]
-        images["pattern"] = self.pattern[idx]
+        images["pattern"] = self.frames_vidDir_and_filename_pattern[idx]
         images["start_id"] = frame_id
         images["img_dir"] = self._img_dir
         images["transforms"] = self.transforms

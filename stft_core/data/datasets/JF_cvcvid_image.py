@@ -8,6 +8,7 @@ from PIL import Image
 import cv2
 import sys
 import numpy as np
+from pathlib import Path
 
 if sys.version_info[0] == 2:
     import xml.etree.cElementTree as ET
@@ -39,22 +40,34 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
         self.is_train = is_train
 
         # set file formats for image and annotations
-        self._img_dir = os.path.join(self.img_dir, "%s.jpg")
+        img_file_type = ".jpg"
+        self._img_dir = os.path.join(self.img_dir, "%s" + img_file_type)
         self._anno_path = os.path.join(self.anno_path, "%s.xml")
 
         with open(self.img_index) as f:
             lines = [x.strip().split(" ") for x in f.readlines()]
+
+        # # give one dir per line and use all frames inside
+        # if len(lines[0]) == 1:
+        #
+        #     # get all image files
+        #     img_files = [f for line in lines for f in Path(line[0]).glob("*/*" + img_file_type)]
+        #
+        #     self.frames_vidDir_and_filename = [Path(path.parent.absolute().name + '/' + path.stem) for path in img_files] #case1/case_M_20181001100941_0U62372100109341_1_005_001-1_a2_ayy_image0001
+        #     self.frames_vidDir_and_filename_pattern = [x[0] + "/" + x[0].split('-')[0] + "-%d" for x in lines] #12-5/12-%d
+        #     # list of all frame ids given in the index file
+        #     # not done yet
+        #     self.frame_id = [int(x[1]) for x in lines]
+        #     self.frame_seg_id = [int(x[2]) for x in lines]
+        #     self.frame_seg_len = [int(x[3]) for x in lines]
+
         # if only two entries per line are given instead of 4
         if len(lines[0]) == 2:
-            self.image_set_index = [x[0] for x in lines]
+            self.frames_vidDir_and_filename = [x[0] for x in lines]
             self.frame_id = [int(x[1]) for x in lines]
         else:
-            if "ASUVideo" in self.img_dir:
-                self.image_set_index = ["%s/%s-%d-%s" % (x[0], x[0].split('-')[0], int(x[2]), x[0].split('-')[1]) for x in lines] #66-2/66-1-2
-                self.pattern = [x[0] + "/" + x[0].split('-')[0] +"-%d-"+x[0].split('-')[1] for x in lines] #66-2/66-%d-2
-            else:
-                self.image_set_index = ["%s/%s-%d" % (x[0], x[0].split('-')[0], int(x[2])) for x in lines] #12-5/12-1
-                self.pattern = [x[0] + "/" + x[0].split('-')[0] +"-%d" for x in lines] #12-5/12-%d
+            self.frames_vidDir_and_filename = ["%s/%d" % (x[0], int(x[2])) for x in lines] #case4/13
+            self.frames_vidDir_and_filename_pattern = [x[0] + "/" + "%d" for x in lines] #12-5/12-%d
             # list of all frame ids given in the index file
             self.frame_id = [int(x[1]) for x in lines]
             self.frame_seg_id = [int(x[2]) for x in lines]
@@ -65,9 +78,9 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
         self.annos = self.load_annos(os.path.join(self.cache_dir, self.image_set + "_anno.pkl"))
 
         if self.is_train:
-            print('Loaded  Training  set : {} , number samples: {}'.format(anno_path, len(self.image_set_index)))
+            print('Loaded  Training  set : {} , number samples: {}'.format(anno_path, len(self.frames_vidDir_and_filename)))
         else:
-            print('Loaded  Validation  set : {} , number samples: {}'.format(anno_path, len(self.image_set_index)))
+            print('Loaded  Validation  set : {} , number samples: {}'.format(anno_path, len(self.frames_vidDir_and_filename)))
 
 
     def __getitem__(self, idx):
@@ -77,7 +90,7 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
             return self._get_test(idx)
 
     def _get_train(self, idx):
-        filename = self.image_set_index[idx]
+        filename = self.frames_vidDir_and_filename[idx]
         img = Image.open(self._img_dir % filename).convert("RGB")
 
         target = self.get_groundtruth(idx)
@@ -93,7 +106,7 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
 
 
     def __len__(self):
-        return len(self.image_set_index)
+        return len(self.frames_vidDir_and_filename)
 
     @property
     def cache_dir(self):
@@ -171,7 +184,7 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
                 if idx % 1000 == 0:
                     print("Had processed {} images".format(idx))
 
-                filename = self.image_set_index[idx]
+                filename = self.frames_vidDir_and_filename[idx]
 
                 tree = ET.parse(self._anno_path % filename).getroot()
                 anno = self._preprocess_annotation(tree)
@@ -191,11 +204,11 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
 
 
     def get_img_name(self, idx):
-        filename = self.image_set_index[idx]
+        filename = self.frames_vidDir_and_filename[idx]
         return filename
 
     def get_visualization(self, idx):
-        filename = self.image_set_index[idx]
+        filename = self.frames_vidDir_and_filename[idx]
 
         img = cv2.imread(self._img_dir % filename)
         # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
