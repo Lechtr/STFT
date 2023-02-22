@@ -60,7 +60,12 @@ class DatasetCatalog(object):
         "JF_SUN": {
             "img_dir":   "SUN/Image",
             "anno_path": "SUN/Annotation",
-            "img_index": "SUN/ImageSets/stft_dataloader_SUN_case1.txt"
+            "img_index": "SUN/ImageSets/stft_dataloader_SUN.txt"
+        },
+        "JF_SUN_CASE1": {
+            "img_dir": "SUN_case1/Image",
+            "anno_path": "SUN_case1/Annotation",
+            "img_index": "SUN_case1/ImageSets/stft_dataloader_SUN_case1.txt"
         },
         "JF_KUMC": {
             "img_dir":   "KUMC/Image",
