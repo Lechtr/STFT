@@ -20,7 +20,7 @@ class BatchCollator(object):
         transposed_batch = list(zip(*batch))
         if self.method in ("base", "cvc_image"):
             images = to_image_list(transposed_batch[0], self.size_divisible)
-        elif self.method in ("rdn", "mega", "fgfa", "stft", "cvc_fgfa", "cvc_mega", "cvc_rdn", "cvc_stft"):
+        elif self.method in ("rdn", "mega", "fgfa", "stft", "cvc_fgfa", "cvc_mega", "cvc_rdn", "cvc_stft", "JF_cvcvid_stft"):
             assert len(transposed_batch[0]) == 1, "Currently 1 gpu could only hold 1 image. Please modify SOLVER.IMS_PER_BATCH and TEST.IMS_PER_BATCH to ensure this."
             images = {}
             for key in transposed_batch[0][0].keys():

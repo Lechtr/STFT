@@ -91,7 +91,7 @@ class DatasetCatalog(object):
             "JF_cvcvid_image": "JF_CVCVIDImageDataset",
             "JF_cvcvid_stft": "JF_CVCVIDSTFTDataset"
         }
-        if ("DET" in name) or ("VID" in name) or ("Video" in name) or ("video" in name):
+        if ("DET" in name) or ("VID" in name) or ("Video" in name) or ("video" in name) or ("JF" in name):
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
