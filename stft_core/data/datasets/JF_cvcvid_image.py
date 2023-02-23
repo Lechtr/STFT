@@ -221,6 +221,8 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
     def get_groundtruth(self, idx):
         anno = self.annos[idx]
 
+        print("JF_CVCVID_IMAGE get_groundtruth() idx: ", idx, ", anno: ", anno)
+
         height, width = anno["im_info"]
         target = BoxList(anno["boxes"].reshape(-1, 4), (width, height), mode="xyxy")
         target.add_field("labels", anno["labels"])
