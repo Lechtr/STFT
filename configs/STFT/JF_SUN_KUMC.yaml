@@ -23,7 +23,7 @@ MODEL:
   RETINANET:
     USE_C5: False
   FCOS:
-    NUM_CLASSES: 2
+    NUM_CLASSES: 3
     FPN_STRIDES: [8, 16, 32, 64, 128]
     INFERENCE_TH: 0.05
     NMS_TH: 0.6
