@@ -66,12 +66,31 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
             self.frames_vidDir_and_filename = [x[0] for x in lines]
             self.frame_id = [int(x[1]) for x in lines]
         else:
-            self.frames_vidDir_and_filename = ["%s/%d" % (x[0], int(x[2])) for x in lines] #case4/13
-            self.frames_vidDir_and_filename_pattern = [x[0] + "/" + "%d" for x in lines] #12-5/12-%d
+            if "ASUVideo" in self.img_dir:
+                self.frames_vidDir_and_filename = ["%s/%s-%d-%s" % (x[0], x[0].split('-')[0], int(x[2]), x[0].split('-')[1]) for x in lines] #66-2/66-1-2.xml
+                self.frames_vidDir_and_filename_pattern = [x[0] + "/" + x[0].split('-')[0] +"-%d-"+x[0].split('-')[1] for x in lines] #66-2/66-%d-2
+            else:
+                self.frames_vidDir_and_filename = ["%s/%d" % (x[0], int(x[2])) for x in lines] #case4/13
+                self.frames_vidDir_and_filename_pattern = [x[0] + "/" + "%d" for x in lines] #12-5/12-%d
             # list of all frame ids given in the index file
             self.frame_id = [int(x[1]) for x in lines]
             self.frame_seg_id = [int(x[2]) for x in lines]
             self.frame_seg_len = [int(x[3]) for x in lines]
+
+
+
+        if "ASUVideo" in self.img_dir and self.is_train:
+            keep = self.filter_annotation()
+
+            if len(lines[0]) == 2:
+                self.frames_vidDir_and_filename = [self.frames_vidDir_and_filename[idx] for idx in range(len(keep)) if keep[idx]]
+                self.frame_id = [self.frame_id[idx] for idx in range(len(keep)) if keep[idx]]
+            else:
+                self.frames_vidDir_and_filename = [self.frames_vidDir_and_filename[idx] for idx in range(len(keep)) if keep[idx]]
+                self.frames_vidDir_and_filename_pattern = [self.frames_vidDir_and_filename_pattern[idx] for idx in range(len(keep)) if keep[idx]]
+                self.frame_id = [self.frame_id[idx] for idx in range(len(keep)) if keep[idx]]
+                self.frame_seg_id = [self.frame_seg_id[idx] for idx in range(len(keep)) if keep[idx]]
+                self.frame_seg_len = [self.frame_seg_len[idx] for idx in range(len(keep)) if keep[idx]]
 
 
 
@@ -120,6 +139,37 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
         return cache_dir
 
 
+    def filter_annotation(self):
+        cache_file =os.path.join(self.cache_dir, self.image_set + "_keep.pkl")
+
+        if os.path.exists(cache_file):
+            with open(cache_file, "rb") as fid:
+                keep = pickle.load(fid)
+            if is_main_process():
+                print("{}'s keep information loaded from {}".format(self.det_vid, cache_file))
+            return keep
+
+        keep = np.zeros((len(self)), dtype=np.bool)
+        for idx in range(len(self)):
+            if idx % 1000 == 0:
+                print("Had filtered {} images".format(idx))
+
+            filename = self.image_set_index[idx]
+
+            tree = ET.parse(self._anno_path % filename).getroot()
+            objs = tree.findall("object")
+            keep[idx] = False if int(objs[0].find("positive").text) == 0 else True
+        print("Had filtered {} images".format(len(self)))
+
+        if is_main_process():
+            with open(cache_file, "wb") as fid:
+                pickle.dump(keep, fid)
+            print("Saving {}'s keep information into {}".format(self.det_vid, cache_file))
+
+        return keep
+
+
+
     # actually processes the annotation for each file
     # extracts the info from the xml and converts to array
     def _preprocess_annotation(self, target):
@@ -140,28 +190,33 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
             ]
             boxes.append(box)
 
+            if "ASUVideo" in self.img_dir:
+                gt_classes.append(int(obj.find("positive").text))
+            else:
+
+                # find class in xml
+                class_name = obj.find("name").text
 
 
-            # find class in xml
-            class_name = obj.find("name").text
+                # map found class to the classes array from this dataloader class
+                # hp == 1
+                # ad == 2
+                # KUMC dataset
+                if class_name == "adenomatous":
+                    class_int = 2
+                elif class_name == "hyperplastic":
+                    class_int = 1
+                # SUN dataset
+                elif class_name in ["Low-grade adenoma", "High-grade adenoma", "Traditional serrated adenoma", "Invasive cancer (T1b)"]:
+                    class_int = 2
+                elif class_name in ["Hyperplastic polyp", "Sessile serrated lesion"]:
+                    class_int = 1
+                else:
+                    class_int = 0
+                    print("ERROR: Dataloader found background class, which should not exist")
 
 
-            # map found class to the classes array from this dataloader class
-            # hp == 1
-            # ad == 2
-            # KUMC dataset
-            if class_name == "adenomatous":
-                class_int = 2
-            elif class_name == "hyperplastic":
-                class_int = 1
-            # SUN dataset
-            elif class_name in ["Low-grade adenoma", "High-grade adenoma", "Traditional serrated adenoma", "Invasive cancer (T1b)"]:
-                class_int = 2
-            elif class_name in ["Hyperplastic polyp", "Sessile serrated lesion"]:
-                class_int = 1
-
-
-            gt_classes.append(class_int)
+                gt_classes.append(class_int)
 
         res = {
             "boxes": torch.tensor(boxes, dtype=torch.float32).reshape(-1, 4),
