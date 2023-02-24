@@ -170,7 +170,7 @@ def do_train(
             synchronize()
 
             if tb_writer is not None:
-                if 'cvc_' in cfg.MODEL.VID.METHOD:
+                if 'cvc' in cfg.MODEL.VID.METHOD:
                     for eval_idx, eval_metric in eval_metric_list.items():
                         for each_name, each_meter in eval_metric.items():
                             tb_writer.add_scalar('{}_{}'.format(eval_idx, each_name), each_meter, iteration)

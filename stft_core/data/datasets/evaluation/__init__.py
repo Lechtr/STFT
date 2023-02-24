@@ -21,6 +21,9 @@ def evaluate(dataset, predictions, output_folder, **kwargs):
         return vid_evaluation(**args)
     elif isinstance(dataset, datasets.CVCVIDImageDataset):
         return vid_cvcvideo_evaluation(**args)
+    elif isinstance(dataset, datasets.JF_CVCVIDImageDataset):
+        # TODO: extra JF evaluation necessary ?
+        return vid_cvcvideo_evaluation(**args)
     else:
         dataset_name = dataset.__class__.__name__
         raise NotImplementedError("Unsupported dataset type {}.".format(dataset_name))
