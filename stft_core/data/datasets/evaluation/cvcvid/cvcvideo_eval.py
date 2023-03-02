@@ -2,7 +2,7 @@ import os
 import numpy as np
 from stft_core.structures.boxlist_ops import boxlist_iou
 
-
+# TODO: eval anpassen auf mehrere Klassen, aktuell wird einfach nur geschaut ob Polyp gefunden wurde, also ungleich Klasse 0 ist
 def cvcvideo_detection_eval(pred_boxlists, gt_boxlists, score_thrs):
     assert len(gt_boxlists) == len(pred_boxlists), "Length of gt and pred lists need to be same."
 

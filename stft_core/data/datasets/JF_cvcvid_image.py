@@ -154,7 +154,7 @@ class JF_CVCVIDImageDataset(torch.utils.data.Dataset):
             if idx % 1000 == 0:
                 print("Had filtered {} images".format(idx))
 
-            filename = self.image_set_index[idx]
+            filename = self.frames_vidDir_and_filename[idx]
 
             tree = ET.parse(self._anno_path % filename).getroot()
             objs = tree.findall("object")
