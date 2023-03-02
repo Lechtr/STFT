@@ -71,6 +71,11 @@ class DatasetCatalog(object):
             "img_dir":   "KUMC/Image",
             "anno_path": "KUMC/Annotation",
             "img_index": "KUMC/ImageSets/stft_dataloader_KUMC.txt"
+        },
+        "JF_KUMC_CASEt1": {
+            "img_dir": "KUMC/Image",
+            "anno_path": "KUMC/Annotation",
+            "img_index": "KUMC/ImageSets/stft_dataloader_KUMC_CASEt1.txt"
         }
         
     }
