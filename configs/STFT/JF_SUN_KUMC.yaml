@@ -41,6 +41,7 @@ DATASETS:
   TRAIN: ("JF_KUMC",)
   TEST: ("JF_KUMC_CASEt1",)
 INPUT:
+  # images are resized to fit these sizes
   MIN_SIZE_TRAIN: (800,)
   MAX_SIZE_TRAIN: 1333
   MIN_SIZE_TEST: 800

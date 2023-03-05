@@ -5,5 +5,6 @@ python -m torch.distributed.launch \
     --master_port=$((RANDOM + 10000)) \
     --config-file configs/STFT/JF_SUN_KUMC.yaml \
     OUTPUT_DIR log_dir/KUMC \
+  #   MODEL.WEIGHT log_dir/KUMC/last_checkpoint \
     SOLVER.IMS_PER_BATCH 1 \
     TEST.IMS_PER_BATCH 1
