@@ -39,7 +39,7 @@ MODEL:
     REG_BETA: 0.11
 DATASETS:
   TRAIN: ("JF_KUMC",)
-  TEST: ("JF_KUMC_CASEt1",)
+  TEST: ("JF_KUMC_VAL",)
 INPUT:
   # images are resized to fit these sizes
   MIN_SIZE_TRAIN: (800,)

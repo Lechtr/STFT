@@ -62,20 +62,20 @@ class DatasetCatalog(object):
             "anno_path": "SUN/Annotation",
             "img_index": "SUN/ImageSets/stft_dataloader_SUN.txt"
         },
-        "JF_SUN_CASE1": {
+        "JF_SUN_VAL": {
             "img_dir":   "SUN/Image",
             "anno_path": "SUN/Annotation",
-            "img_index": "SUN/ImageSets/stft_dataloader_SUN_case1.txt"
+            "img_index": "SUN/ImageSets/stft_dataloader_SUN_val.txt"
         },
         "JF_KUMC": {
             "img_dir":   "KUMC/Image",
             "anno_path": "KUMC/Annotation",
             "img_index": "KUMC/ImageSets/stft_dataloader_KUMC.txt"
         },
-        "JF_KUMC_CASEt1": {
+        "JF_KUMC_VAL": {
             "img_dir":   "KUMC/Image",
             "anno_path": "KUMC/Annotation",
-            "img_index": "KUMC/ImageSets/stft_dataloader_KUMC_CASEt1.txt"
+            "img_index": "KUMC/ImageSets/stft_dataloader_KUMC_val.txt"
         }
         
     }
