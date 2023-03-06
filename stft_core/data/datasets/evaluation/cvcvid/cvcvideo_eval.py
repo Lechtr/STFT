@@ -13,34 +13,66 @@ def cvcvideo_detection_eval(pred_boxlists, gt_boxlists, score_thrs):
     pos_num=0
     neg_num=0
 
+    # for each eval Image one jeweils (len(521))
+    # gt_boxlists: [BoxList(num_boxes=1, image_width=384, image_height=288, mode=xyxy), ..., BoxList(num_boxes=1, image_width=384, image_height=288, mode=xyxy)]
+    # pred_boxlists: [BoxList(num_boxes=300, image_width=384, image_height=288, mode=xyxy), BoxList(num_boxes=300, image_width=384, image_height=288, mode=xyxy), ...
+    # score_thrs: array([0.6])
     for idx, (gt_boxlist, pred_boxlist) in enumerate(zip(gt_boxlists, pred_boxlists)):
-        gt_bbox = gt_boxlist.bbox.numpy()
-        gt_label = gt_boxlist.get_field("labels").numpy()
-        if gt_label.sum()==0:
-            have_obj=False
-            neg_num+=1
-        else:
-            have_obj=True
-            pos_num+=1
+        # gt_boxlist: BoxList(num_boxes=1, image_width=384, image_height=288, mode=xyxy)
+        # pred_boxlist: BoxList(num_boxes=300, image_width=384, image_height=288, mode=xyxy)
+        gt_bbox = gt_boxlist.bbox.numpy() # array([[177., 181., 262., 241.]], dtype=float32)
+        gt_label = gt_boxlist.get_field("labels").numpy() # array([2])
+        # no Polyp in the image
+        # if gt_label.sum()==0: # 2
+        #     have_obj=False
+        #     neg_num+=1
+        # else:
+        #     have_obj=True
+        #     pos_num+=1
 
-        pred_bbox = pred_boxlist.bbox.numpy()
-        pred_score = pred_boxlist.get_field("scores").numpy()
+        # pred_bbox = pred_boxlist.bbox.numpy() # array([[ 29.61034 ,  64.35797 , 265.34225 , 252.00955 ],..., [164.34525 , 181.94551 , 208.72359 , 226.4958  ]], dtype=float32)
+        pred_score = pred_boxlist.get_field("scores").numpy() # array([0.32293808, 0.31038857, ..., 0.12737879], dtype=float32)
+        pred_label = pred_boxlist.get_field("labels").numpy() # array([1, 2, 1, 2, 1, ....])
 
         for score_idx, score_thr in enumerate(score_thrs):
-            det_inds = pred_score >= score_thr
+            det_inds = pred_score >= score_thr # array([False, ..., False])
             highscore_score = pred_score[det_inds]
-            highscore_bbox = pred_bbox[det_inds]
+            # highscore_bbox = pred_bbox[det_inds]
+            highscore_label = pred_label[det_inds]
 
-            if highscore_bbox.shape[0]>0:
-                if have_obj:
-                    detection_tp[idx,score_idx]+=1
-                else:
-                    detection_fp[idx,score_idx]+=1
-            else:
-                if have_obj:
-                    detection_fn[idx,score_idx]+=1
-                else:
-                    detection_tn[idx,score_idx]+=1
+            # für Klassifiaktion die Scores ignorieren und Annahme, dass immer nur 1 Polyp pro Bild
+            # da bereits nach Score sortiert dann einfach das erste Label nehmen
+            # für hp vs ad
+            # TP = gt ad, pred ad
+            # FP = gt hp, pred ad
+            # TN = gt hp, pred hp
+            # FN = gt ad, pred hp
+            for polyp_in_image_index, gt in enumerate(gt_label):
+                # hp == 1; ad == 2
+                if gt == 2 and pred_label[polyp_in_image_index] == 2:
+                    detection_tp[idx, score_idx] += 1
+                elif gt == 1 and pred_label[polyp_in_image_index] == 2:
+                    detection_fp[idx, score_idx] += 1
+                elif gt == 1 and pred_label[polyp_in_image_index] == 1:
+                    detection_tn[idx, score_idx] += 1
+                elif gt == 2 and pred_label[polyp_in_image_index] == 1:
+                    detection_fn[idx, score_idx] += 1
+
+
+            # Boxen predicted
+            # if highscore_bbox.shape[0]>0:
+            #     if have_obj:
+            #         detection_tp[idx,score_idx]+=1 # array([[0], [0],....])
+            #     else:
+            #         detection_fp[idx,score_idx]+=1
+            # # keine Boxen predicted
+            # else:
+            #     if have_obj:
+            #         detection_fn[idx,score_idx]+=1
+            #     else:
+            #         detection_tn[idx,score_idx]+=1
+
+
 
     TP = np.sum(detection_tp, axis=0)
     FP = np.sum(detection_fp, axis=0)
@@ -49,6 +81,8 @@ def cvcvideo_detection_eval(pred_boxlists, gt_boxlists, score_thrs):
     det_pos = TP + FP
     det_neg = TN + FN
 
+
+    # das passt so, für Multi-class muss die Berechnung der TP,FP,... angepasst werden
     Precision = 100*TP/(TP+FP+1e-7)
     Recall = 100*TP/(TP+FN+1e-7)
     Accuracy = 100*(TP+TN)/(TP+TN+FP+FN+1e-7)
