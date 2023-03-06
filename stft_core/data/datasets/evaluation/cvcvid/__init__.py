@@ -5,7 +5,7 @@ import os
 import torch
 
 
-from .cvcvideo_eval import cvcvideo_detection_eval, cvcvideo_localization_center_eval
+from .cvcvideo_eval import cvcvideo_detection_eval# , cvcvideo_localization_center_eval
 
 
 def vid_cvcvideo_evaluation(dataset, predictions, output_folder, visulize, vis_thr, **_):
@@ -70,12 +70,13 @@ def vid_cvcvideo_evaluation(dataset, predictions, output_folder, visulize, vis_t
 
             gt_bbox = gt_boxlist.bbox.numpy()
             gt_label = gt_boxlist.get_field("labels").numpy()
-            if gt_label.sum()==0:
-                save_line += str(0)+' '
-            else:
-                save_line += str(1)+' '
-                for gt_idx in range(gt_label.sum()):
-                    cv2.rectangle(img,(int(gt_bbox[gt_idx][0]),int(gt_bbox[gt_idx][1])),(int(gt_bbox[gt_idx][2]),int(gt_bbox[gt_idx][3])),(0,255,0),2)
+            save_line += str(gt_label[0]) + ' '
+            # if gt_label.sum()==0:
+            #     save_line += str(0)+' '
+            # else:
+            #     save_line += str(1)+' '
+            #     for gt_idx in range(gt_label.sum()):
+            #         cv2.rectangle(img,(int(gt_bbox[gt_idx][0]),int(gt_bbox[gt_idx][1])),(int(gt_bbox[gt_idx][2]),int(gt_bbox[gt_idx][3])),(0,255,0),2)
 
             pred_score = pred_boxlist.get_field("scores").numpy()
             pred_bbox = pred_boxlist.bbox.numpy()
