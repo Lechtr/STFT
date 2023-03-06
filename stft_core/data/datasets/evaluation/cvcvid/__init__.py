@@ -50,18 +50,18 @@ def vid_cvcvideo_evaluation(dataset, predictions, output_folder, visulize, vis_t
             det_evals_dict[each_name] = each_iterm
         logger.info(pt_string)
 
-    logger.info(" Polyp Localization Task:")
-    loc_center_evals_dict = {}
-    loc_evals, loc_tp, loc_fp, loc_fn = cvcvideo_localization_center_eval(pred_boxlists, gt_boxlists, score_thrs)
-    loc_metrics = ['Precision', 'Recall', 'F1_score', 'F2_score']
-    for i in range(score_thrs.shape[0]):
-        pt_string = '\nscore_thr:{:.2f}'.format(score_thrs[i])
-        for j in range(len(loc_metrics)):
-            pt_string += '  {}: {:.4f} '.format(loc_metrics[j], loc_evals[j][i])
-            each_name = '{}/score_thr:{:.2f}'.format(loc_metrics[j], score_thrs[i])
-            each_iterm = loc_evals[j][i]
-            loc_center_evals_dict[each_name] = each_iterm
-        logger.info(pt_string)
+    # logger.info(" Polyp Localization Task:")
+    # loc_center_evals_dict = {}
+    # loc_evals, loc_tp, loc_fp, loc_fn = cvcvideo_localization_center_eval(pred_boxlists, gt_boxlists, score_thrs)
+    # loc_metrics = ['Precision', 'Recall', 'F1_score', 'F2_score']
+    # for i in range(score_thrs.shape[0]):
+    #     pt_string = '\nscore_thr:{:.2f}'.format(score_thrs[i])
+    #     for j in range(len(loc_metrics)):
+    #         pt_string += '  {}: {:.4f} '.format(loc_metrics[j], loc_evals[j][i])
+    #         each_name = '{}/score_thr:{:.2f}'.format(loc_metrics[j], score_thrs[i])
+    #         each_iterm = loc_evals[j][i]
+    #         loc_center_evals_dict[each_name] = each_iterm
+    #     logger.info(pt_string)
 
     if output_folder and visulize:
         for image_id, (gt_boxlist, pred_boxlist) in enumerate(zip(gt_boxlists, pred_boxlists)):
@@ -90,8 +90,8 @@ def vid_cvcvideo_evaluation(dataset, predictions, output_folder, visulize, vis_t
 
             cv2.imwrite(output_folder+'/'+filename.split('/')[-1]+'.jpg', img)
             save_line += str(det_tp[image_id][0])+' '+str(det_fp[image_id][0])+' '+str(det_tn[image_id][0])+' '+str(det_fn[image_id][0])+' '
-            save_line += str(loc_tp[image_id][0])+' '+str(loc_fp[image_id][0])+' '+str(loc_fn[image_id][0])+'\n'
+            # save_line += str(loc_tp[image_id][0])+' '+str(loc_fp[image_id][0])+' '+str(loc_fn[image_id][0])+'\n'
             with open(output_folder+'/result.txt', 'a+') as save_file:
                 save_file.write(save_line)
 
-    return {'Detection':det_evals_dict, 'LocalizationCenter':loc_center_evals_dict}
+    return {'Detection':det_evals_dict}# , 'LocalizationCenter':loc_center_evals_dict}
