@@ -34,14 +34,14 @@ def sigmoid_focal_loss(
     # torchvision.ops.sigmoid_focal_loss()
 
     # original version
-    p = torch.sigmoid(inputs) # 0.001 *: 6.8632  6.1936,  4.8491  4.5029,  4.8197  4.4600,  4.7265  4.3510,  4.5760  4.2027,  4.4253  4.0652,  4.3252  3.9723,  4.2739  3.9225,  4.2524  3.9001,  4.2444  3.8901
-    ce_loss = F.binary_cross_entropy_with_logits(
-        inputs, targets, reduction="none"
+    # p = torch.sigmoid(inputs) # 0.001 *: 6.8632  6.1936,  4.8491  4.5029,  4.8197  4.4600,  4.7265  4.3510,  4.5760  4.2027,  4.4253  4.0652,  4.3252  3.9723,  4.2739  3.9225,  4.2524  3.9001,  4.2444  3.8901
+    # ce_loss = F.binary_cross_entropy_with_logits(
+    #     inputs, targets, reduction="none"
     ) # 0.001 *: 6.8398  6.1745, 4.8374  4.4927, 4.8081  4.4501, 4.7155  4.3415, 4.5655  4.1939, 4.4154  4.0570, 4.3159  3.9643, 4.2648  3.9148, 4.2434  3.8924, 4.2353  3.8826
 
     # multiclass loss
     # computes better with targets as int of class 0, 1 or 2 instead of one-hot-encoded
-    # CrossEntropyLoss(inputs, targets, reduction="none")
+    CrossEntropyLoss(inputs, targets, reduction="none")
 
 
     p_t = p * targets + (1 - p) * (1 - targets) # 0.9932  0.9938, 0.9952  0.9955, 0.9952  0.9955, 0.9953  0.9957, 0.9954  0.9958, 0.9956  0.9959, 0.9957  0.9960, 0.9957  0.9961, 0.9958  0.9961, 0.9958  0.9961
@@ -468,8 +468,13 @@ class STFTFCOSLossComputation(object):
         num_foreground = foreground_idxs.sum() # tensor(15, device='cuda:0')
         acc_centerness_num = gt_centerness[foreground_idxs].sum() # tensor(10.6697, device='cuda:0')
 
-        gt_classes_target = torch.zeros_like(pred_class_logits) # torch.Size([17064, 2])
-        gt_classes_target[foreground_idxs, gt_classes[foreground_idxs]-1] = 1
+        # original
+        # gt_classes_target = torch.zeros_like(pred_class_logits) # torch.Size([17064, 2])
+        # gt_classes_target[foreground_idxs, gt_classes[foreground_idxs]-1] = 1
+
+        # Integer-Class_index statt one-hot-encoded
+        gt_classes_target = torch.zeros(pred_class_logits.shape[0])  # torch.Size([17064, 2])
+        gt_classes_target[foreground_idxs] = gt_classes[foreground_idxs] -1
 
         num_gpus = get_num_gpus()
         num_foreground_avg_per_gpu = max(reduce_sum(num_foreground).item() / float(num_gpus), 1.0)
@@ -517,8 +522,13 @@ class STFTFCOSLossComputation(object):
         num_foreground_stft = foreground_idxs_stft.sum() # tensor(788, device='cuda:0')
         num_foreground_stft = max(reduce_sum(num_foreground_stft).item() / float(num_gpus), 1.0) # 788.0
 
-        stft_gt_classes_target = torch.zeros_like(stft_class_logits) # tensor([[0., 0.],... # shape: torch.Size([17884, 2])
-        stft_gt_classes_target[foreground_idxs_stft, stft_gt_classes[foreground_idxs_stft]-1] = 1
+        # original
+        # stft_gt_classes_target = torch.zeros_like(stft_class_logits) # tensor([[0., 0.],... # shape: torch.Size([17884, 2])
+        # stft_gt_classes_target[foreground_idxs_stft, stft_gt_classes[foreground_idxs_stft]-1] = 1
+
+        # Integer-Class_index statt one-hot-encoded
+        stft_gt_classes_target = torch.zeros(stft_class_logits.shape[0])  # torch.Size([17064, 2])
+        stft_gt_classes_target[foreground_idxs_stft] = stft_gt_classes[foreground_idxs_stft] - 1
 
         loss_stft_cls = sigmoid_focal_loss_jit(
             stft_class_logits[valid_idxs_stft], # tensor([[-3.4625, -3.4591], [-3.3978, -3.4696], [-3.5369, -3.5909], ..., [-1.4151, -1.0552], [-1.6657, -1.3548], [-2.0824, -2.0467]], device='cuda:0', grad_fn=<IndexBackward>)
