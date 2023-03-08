@@ -1,6 +1,7 @@
 import os
 import torch
 from torch.nn import functional as F
+from torch.nn import CrossEntropyLoss
 
 from stft_core.modeling.utils import cat
 from stft_core.structures.bounding_box import BoxList
@@ -22,29 +23,39 @@ def reduce_sum(tensor):
 
 
 def sigmoid_focal_loss(
-    inputs,
-    targets,
+    # show the first 10 items of the arrays in the following comments
+    inputs, # -4.9781 -5.0811, -5.3265 -5.4008, -5.3326 -5.4104, -5.3522 -5.4352, -5.3846 -5.4699, -5.4182 -5.5032, -5.4411 -5.5264, -5.4531 -5.5391, -5.4581 -5.5448, -5.4600 -5.5474
+    targets, # 0  0, 0  0, 0  0, 0  0, 0  0, 0  0, 0  0, 0  0, 0  0, 0  0
     alpha: float = -1,
     gamma: float = 2,
     reduction: str = "none",
 ):
-    p = torch.sigmoid(inputs)
+    # BCEWithLogitsLoss(inputs, targets, reduction="none")
+    # torchvision.ops.sigmoid_focal_loss()
+
+    # original version
+    p = torch.sigmoid(inputs) # 0.001 *: 6.8632  6.1936,  4.8491  4.5029,  4.8197  4.4600,  4.7265  4.3510,  4.5760  4.2027,  4.4253  4.0652,  4.3252  3.9723,  4.2739  3.9225,  4.2524  3.9001,  4.2444  3.8901
     ce_loss = F.binary_cross_entropy_with_logits(
         inputs, targets, reduction="none"
-    )
-    p_t = p * targets + (1 - p) * (1 - targets)
-    loss = ce_loss * ((1 - p_t) ** gamma)
+    ) # 0.001 *: 6.8398  6.1745, 4.8374  4.4927, 4.8081  4.4501, 4.7155  4.3415, 4.5655  4.1939, 4.4154  4.0570, 4.3159  3.9643, 4.2648  3.9148, 4.2434  3.8924, 4.2353  3.8826
 
+    # multiclass loss
+    # computes better with targets as int of class 0, 1 or 2 instead of one-hot-encoded
+    # CrossEntropyLoss(inputs, targets, reduction="none")
+
+
+    p_t = p * targets + (1 - p) * (1 - targets) # 0.9932  0.9938, 0.9952  0.9955, 0.9952  0.9955, 0.9953  0.9957, 0.9954  0.9958, 0.9956  0.9959, 0.9957  0.9960, 0.9957  0.9961, 0.9958  0.9961, 0.9958  0.9961
+    loss = ce_loss * ((1 - p_t) ** gamma) # 1e-07 *: 3.2108  2.3613, 1.1347  0.9089, 1.1142  0.8832, 1.0510  0.8201, 0.9538  0.7392, 0.8628  0.6691, 0.8057  0.6243, 0.7774  0.6011, 0.7657  0.5909, 0.7614  0.586,
     if alpha >= 0:
-        alpha_t = alpha * targets + (1 - alpha) * (1 - targets)
-        loss = alpha_t * loss
+        alpha_t = alpha * targets + (1 - alpha) * (1 - targets) # 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500
+        loss = alpha_t * loss # 1e-07 : ,3.1462  2.2038, 1.3251  0.9630, 1.2719  0.9041, 1.1880  0.8279, 1.0954  0.7552, 1.0236  0.7017, 0.9821  0.6673, 0.9632  0.6492, 0.9551  0.6386, 0.9479  0.6317
 
     if reduction == "mean":
         loss = loss.mean()
     elif reduction == "sum":
         loss = loss.sum()
 
-    return loss
+    return loss # 2.49932
 
 sigmoid_focal_loss_jit = torch.jit.script(
     sigmoid_focal_loss
@@ -268,7 +279,11 @@ class STFTFCOSLossComputation(object):
         self.stft_reg_beta = cfg.MODEL.STFT.REG_BETA
 
     @torch.no_grad()
-    def get_ground_truth(self, shifts, targets, pre_boxes_list):
+    def get_ground_truth(self,
+                         shifts, # shape [1, 5, 12800, 2]
+                         targets, # [BoxList(num_boxes=1, image_width=1020, image_height=800, mode=xyxy)]
+                         pre_boxes_list # shape: [1, 17064, 4]
+                         ):
         gt_classes = []
         gt_shifts_deltas = []
         gt_centerness = []
@@ -276,20 +291,20 @@ class STFTFCOSLossComputation(object):
         stft_gt_classes = []
         stft_gt_shifts_deltas = []
 
-        for shifts_per_image, targets_per_image, pre_boxes in zip(shifts, targets, pre_boxes_list):
+        for shifts_per_image, targets_per_image, pre_boxes in zip(shifts, targets, pre_boxes_list): # shifts_per_image: [5, 12800, 2], pre_boxes: [17064, 4]
             object_sizes_of_interest = torch.cat([
                 shifts_i.new_tensor(size).unsqueeze(0).expand(
                     shifts_i.size(0), -1) for shifts_i, size in zip(
                     shifts_per_image, self.object_sizes_of_interest)
-            ], dim=0)
+            ], dim=0) # tensor([[-1.0000e+00,  6.4000e+01], [-1.0000e+00,  6.4000e+01], ..., [ 5.1200e+02,  1.0000e+08]], device='cuda:0'); shape: [17064, 2]
 
-            shifts_over_all_feature_maps = torch.cat(shifts_per_image, dim=0)
+            shifts_over_all_feature_maps = torch.cat(shifts_per_image, dim=0) # tensor([[  4.,   4.], [ 12.,   4.], [ 20.,   4.], ..., [704., 832.], [832., 832.], [960., 832.]], device='cuda:0'); torch.Size([17064, 2])
 
-            gt_boxes = targets_per_image.bbox
-            deltas = self.shift2box_transform.get_deltas(shifts_over_all_feature_maps, gt_boxes.unsqueeze(1))
+            gt_boxes = targets_per_image.bbox # tensor([[496.9392, 267.2414, 765.7230, 520.6896]], device='cuda:0')
+            deltas = self.shift2box_transform.get_deltas(shifts_over_all_feature_maps, gt_boxes.unsqueeze(1)) # tensor([[[-492.9392, -263.2414,  761.7230,  516.6896], [-484.9392, -263.2414,  753.7230,  516.6896], [-476.9392, -263.2414,  745.7230,  516.6896], ..., [ 207.0608,  564.7587,   61.7230, -311.3104], [ 335.0608,  564.7587,  -66.2770, -311.3104], [ 463.0608,  564.7587, -194.2770, -311.3104]]], device='cuda:0'); torch.Size([1, 17064, 4])
 
             if self.center_sampling_radius > 0:
-                centers = targets_per_image.center()
+                centers = targets_per_image.center() # tensor([[631.3311, 393.9655]], device='cuda:0')
                 is_in_boxes = []
                 for stride, shifts_i in zip(self.fpn_strides, shifts_per_image):
                     radius = stride * self.center_sampling_radius
@@ -318,18 +333,22 @@ class STFTFCOSLossComputation(object):
             # if there are still more than one objects for a position,
             # we choose the one with minimal area
             positions_min_area, gt_matched_idxs = gt_positions_area.min(dim=0)
+            # positions_min_area: tensor([100000000., 100000000.,  ...,,100000000.], device='cuda:0'); torch.Size([17064])
+            # gt_matched_idxs: tensor([0, 0, 0,  ..., 0, 0, 0], device='cuda:0'); torch.Size([17064]), alles 0
+            # positions_min_area[positions_min_area<100000000]: tensor([68646.0078, 68646.0078, 68646.0078, 68646.0078, 68646.0078, 68646.0078, 68646.0078, 68646.0078, 68646.0078], device='cuda:0')
 
             # ground truth box regression
             gt_shifts_reg_deltas_i = self.shift2box_transform.get_deltas(
                 shifts_over_all_feature_maps, targets_per_image[gt_matched_idxs].bbox)
 
             # ground truth classes
-            labels_per_im = targets_per_image.get_field("labels")
+            labels_per_im = targets_per_image.get_field("labels") # tensor([2], device='cuda:0')
             has_gt = len(targets_per_image) > 0
             if has_gt:
-                gt_classes_i = labels_per_im[gt_matched_idxs]
+                gt_classes_i = labels_per_im[gt_matched_idxs] # tensor([2, 2, 2,  ..., 2, 2, 2], device='cuda:0')
                 # Shifts with area inf are treated as background.
-                gt_classes_i[positions_min_area == INF] = self.num_classes+5 #for not gt
+                gt_classes_i[positions_min_area == INF] = self.num_classes+5 #for not gt # torch.Size([17055])
+                # alles 7er bis auf gt_classes_i[gt_classes_i<7]: tensor([2, 2, 2, 2, 2, 2, 2, 2, 2], device='cuda:0'); torch.Size([17064])
             else:
                 gt_classes_i = torch.zeros_like(gt_matched_idxs)+self.num_classes+5 #for not gt
 
@@ -347,13 +366,18 @@ class STFTFCOSLossComputation(object):
 
 
             # stft
-            iou = boxlist_iou(BoxList(pre_boxes, targets_per_image.size, targets_per_image.mode), targets_per_image)
+            iou = boxlist_iou(BoxList(pre_boxes, targets_per_image.size, targets_per_image.mode), targets_per_image) # tensor([[0.0000], [0.0000], [0.0000], ..., [0.0373], [0.0311], [0.0000]], device='cuda:0'); torch.Size([17064, 1])
             (max_iou, argmax_iou) = iou.max(dim=1)
-            invalid = max_iou < self.stft_iou_thresh
-            gt_target = gt_boxes[argmax_iou]
+            # max_iou: tensor([0.0000, 0.0000, 0.0000,  ..., 0.0373, 0.0311, 0.0000], device='cuda:0'), torch.Size([17064]), zwischen 0 und 0.7139
+            # argmax_iou: tensor([0, 0, 0,  ..., 0, 0, 0], device='cuda:0'); torch.Size([17064]); alles 0
+            invalid = max_iou < self.stft_iou_thresh # 0.1
+            #invalid: tensor([True, True, True,  ..., True, True, True], device='cuda:0'); torch.Size([17064]); sum(invalid): tensor(15878, device='cuda:0')
+            gt_target = gt_boxes[argmax_iou] # tensor([[496.9392, 267.2414, 765.7230, 520.6896], [496.9392, 267.2414, 765.7230, 520.6896], [496.9392, 267.2414, 765.7230, 520.6896], ...,
 
-            stft_cls_target = labels_per_im[argmax_iou]
+            stft_cls_target = labels_per_im[argmax_iou] # tensor([2, 2, 2,  ..., 2, 2, 2], device='cuda:0'); torch.Size([17064])
             stft_cls_target[invalid] = self.num_classes+5 #for not gt
+            # stft_cls_target: tensor([7, 7, 7,  ..., 7, 7, 7], device='cuda:0'); torch.Size([17064])
+            # stft_cls_target[stft_cls_target<7].shape: torch.Size([1186])
 
             stft_bbox_std = pre_boxes.new_tensor(self.stft_bbox_std)
             pre_boxes_wh = pre_boxes[:, 2:4] - pre_boxes[:, 0:2]
@@ -372,39 +396,79 @@ class STFTFCOSLossComputation(object):
         )
 
 
-    def __call__(self, shifts, pred_class_logits, pred_shift_deltas, pred_centerness, 
-        targets, bd_based_box, stft_bbox_cls, stft_bbox_reg):
+    def __call__(self, shifts,
+                 pred_class_logits, # box_cls
+                 pred_shift_deltas, # box_regression
+                 pred_centerness, # centerness
+                 targets, # targets
+                 bd_based_box, # stft_based_box
+                 stft_bbox_cls, # stft_box_cls
+                 stft_bbox_reg # stft_box_reg
+                 ):
 
         (
-            gt_classes,
-            gt_shifts_deltas,
-            gt_centerness,
-            stft_gt_classes,
-            stft_gt_shifts_deltas,
+            gt_classes, # tensor([[7, 7, 7,  ..., 7, 7, 7]], device='cuda:0'), len(): 16289
+            gt_shifts_deltas, # tensor([[[-418.0276, -378.1429,  683.9816,  658.5000],
+                              # [-410.0276, -378.1429,  675.9816,  658.5000],
+                              # [-402.0276, -378.1429,  667.9816,  658.5000],
+                              # ...,
+                              # [ 281.9724,  449.8571,  -16.0184, -169.5000],
+                              # [ 409.9724,  449.8571, -144.0184, -169.5000],
+                              # [ 537.9724,  449.8571, -272.0184, -169.5000]]], device='cuda:0')
+            gt_centerness, # tensor([[0., 0., 0.,  ..., 0., 0., 0.]], device='cuda:0')
+            stft_gt_classes, # tensor([[7, 7, 7,  ..., 2, 2, 7]], device='cuda:0')
+            stft_gt_shifts_deltas, # tensor([[[17.0964, 19.6779, 25.4766, 31.6015],
+                                   # [11.7800, 14.4907, 16.8000, 22.6185],
+                                   # [11.6342, 14.2929, 16.6973, 22.2759],
+                                   # ...,
+                                   # [ 0.3030, -0.1358, -0.9936, -1.1743],
+                                   # [ 0.1181, -0.2530, -1.2688, -1.2617],
+                                   # [-0.7409, -1.2328, -1.8114, -1.6853]]], device='cuda:0')
         ) = self.get_ground_truth(shifts, targets, bd_based_box)
 
         (
-            pred_class_logits,
-            pred_shift_deltas,
+            pred_class_logits, # tensor([[-4.8728, -5.1408],
+                                # [-5.2613, -5.5084],
+                                # [-5.2732, -5.5276],
+                                # ...,
+                                # [-3.6198, -3.9084],
+                                # [-4.0312, -4.3180],
+                                # [-3.8618, -4.8286]], device='cuda:0', grad_fn=<ViewBackward>)
+            pred_shift_deltas, #tensor([[ 20.0040,  18.0807,  31.2385,  22.1902],
+                                # [ 36.2581,  22.9876,  39.5121,  32.3763],
+                                # [ 36.0427,  23.2489,  39.2647,  32.9178],
+                                # ...,
+                                # [396.5472, 410.2602, 359.6518, 172.9366],
+                                # [461.2139, 378.3073, 406.3593, 187.3258],
+                                # [325.9882, 226.5166, 246.2104, 135.8087]], device='cuda:0',
+                                # grad_fn=<ViewBackward>)
             pred_centerness,
-            stft_class_logits,
+            stft_class_logits, # tensor([[-3.4625, -3.4591],
+                                # [-3.3978, -3.4696],
+                                # [-3.5369, -3.5909],
+                                # ...,
+                                # [-1.4151, -1.0552],
+                                # [-1.6657, -1.3548],
+                                # [-2.0824, -2.0467]], device='cuda:0', grad_fn=<ViewBackward>)
             stft_shift_deltas
         ) = permute_all_cls_and_box_to_N_HWA_K_and_concat(
             pred_class_logits, pred_shift_deltas, pred_centerness,
-            stft_bbox_cls, stft_bbox_reg, self.num_classes
+            stft_bbox_cls, stft_bbox_reg,
+            self.num_classes # 2
         )  # Shapes: (N x R, K) and (N x R, 4), respectively.
 
         # fcos
-        gt_classes = gt_classes.flatten().long()
+        gt_classes = gt_classes.flatten().long() # tensor([7, 7, 7,  ..., 7, 7, 7], device='cuda:0'); torch.Size([17064])
+        # gt_classes[gt_classes<7]: tensor([2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], device='cuda:0')
         gt_shifts_deltas = gt_shifts_deltas.view(-1, 4)
         gt_centerness = gt_centerness.view(-1, 1)
 
-        valid_idxs = gt_classes >= 0
-        foreground_idxs = (gt_classes >= 0) & (gt_classes != (self.num_classes+5))
-        num_foreground = foreground_idxs.sum()
-        acc_centerness_num = gt_centerness[foreground_idxs].sum()
+        valid_idxs = gt_classes >= 0 # tensor([True, True, True,  ..., True, True, True], device='cuda:0'); torch.Size([17064])
+        foreground_idxs = (gt_classes >= 0) & (gt_classes != (self.num_classes+5)) # tensor([False, False, False,  ..., False, False, False], device='cuda:0'); torch.Size([17064]);
+        num_foreground = foreground_idxs.sum() # tensor(15, device='cuda:0')
+        acc_centerness_num = gt_centerness[foreground_idxs].sum() # tensor(10.6697, device='cuda:0')
 
-        gt_classes_target = torch.zeros_like(pred_class_logits)
+        gt_classes_target = torch.zeros_like(pred_class_logits) # torch.Size([17064, 2])
         gt_classes_target[foreground_idxs, gt_classes[foreground_idxs]-1] = 1
 
         num_gpus = get_num_gpus()
@@ -413,12 +477,18 @@ class STFTFCOSLossComputation(object):
 
         # logits loss
         loss_cls = sigmoid_focal_loss_jit(
-            pred_class_logits[valid_idxs],
-            gt_classes_target[valid_idxs],
-            alpha=self.focal_loss_alpha,
-            gamma=self.focal_loss_gamma,
+            pred_class_logits[valid_idxs], # tensor([[-4.8728, -5.1408],
+                                            # [-5.2613, -5.5084],
+                                            # [-5.2732, -5.5276],
+                                            # ...,
+            gt_classes_target[valid_idxs], # tensor([[0., 0.], # max is 1
+                                            # [0., 0.],
+                                            # [0., 0.],
+                                            # ...,
+            alpha=self.focal_loss_alpha, # 0.25
+            gamma=self.focal_loss_gamma, # 2.0
             reduction="sum",
-        ) / num_foreground_avg_per_gpu
+        ) / num_foreground_avg_per_gpu # 9.0
 
         # regression loss
         loss_box_reg = iou_loss(
@@ -439,26 +509,26 @@ class STFTFCOSLossComputation(object):
 
 
         # stft
-        stft_gt_classes = stft_gt_classes.flatten().long()
-        stft_gt_shifts_deltas = stft_gt_shifts_deltas.view(-1, 4)
+        stft_gt_classes = stft_gt_classes.flatten().long() # tensor([7, 7, 7,  ..., 7, 7, 7], device='cuda:0')
+        stft_gt_shifts_deltas = stft_gt_shifts_deltas.view(-1, 4) # tensor([[13.6345,  7.3209, 18.1021, 20.8582], [ 9.3808,  5.4616, 11.7169, 14.6950], [ 9.2391,  5.3799, 11.6057, 14.4191], ..., [ 0.1688, -1.1297, -1.4255, -2.0119], [-0.0473, -1.2312, -1.6757, -2.0927], [-0.8740, -2.5119, -2.3062, -2.8309]], device='cuda:0')
 
-        valid_idxs_stft = stft_gt_classes >= 0.
-        foreground_idxs_stft = (stft_gt_classes >= 0) & (stft_gt_classes != (self.num_classes+5))
-        num_foreground_stft = foreground_idxs_stft.sum()
-        num_foreground_stft = max(reduce_sum(num_foreground_stft).item() / float(num_gpus), 1.0)
+        valid_idxs_stft = stft_gt_classes >= 0. # tensor([True, True, True,  ..., True, True, True], device='cuda:0')
+        foreground_idxs_stft = (stft_gt_classes >= 0) & (stft_gt_classes != (self.num_classes+5)) # tensor([False, False, False,  ...,  True,  True, False], device='cuda:0')
+        num_foreground_stft = foreground_idxs_stft.sum() # tensor(788, device='cuda:0')
+        num_foreground_stft = max(reduce_sum(num_foreground_stft).item() / float(num_gpus), 1.0) # 788.0
 
-        stft_gt_classes_target = torch.zeros_like(stft_class_logits)
+        stft_gt_classes_target = torch.zeros_like(stft_class_logits) # tensor([[0., 0.],... # shape: torch.Size([17884, 2])
         stft_gt_classes_target[foreground_idxs_stft, stft_gt_classes[foreground_idxs_stft]-1] = 1
 
         loss_stft_cls = sigmoid_focal_loss_jit(
-            stft_class_logits[valid_idxs_stft],
-            stft_gt_classes_target[valid_idxs_stft],
-            alpha=self.focal_loss_alpha,
-            gamma=self.focal_loss_gamma,
+            stft_class_logits[valid_idxs_stft], # tensor([[-3.4625, -3.4591], [-3.3978, -3.4696], [-3.5369, -3.5909], ..., [-1.4151, -1.0552], [-1.6657, -1.3548], [-2.0824, -2.0467]], device='cuda:0', grad_fn=<IndexBackward>)
+            stft_gt_classes_target[valid_idxs_stft], # tensor([[0., 0.], [0., 0.], [0., 0.], ..., [0., 1.], [0., 1.], [0., 0.]], device='cuda:0')
+            alpha=self.focal_loss_alpha, # 0.25
+            gamma=self.focal_loss_gamma, # 2.0
             reduction="sum",
         ) / num_foreground_stft
 
-        if foreground_idxs_stft.numel() > 0:
+        if foreground_idxs_stft.numel() > 0 # 16289
             loss_stft_reg = (
                 smooth_l1_loss(
                     stft_shift_deltas[foreground_idxs_stft],

@@ -99,12 +99,12 @@ def do_train(
                 raise ValueError("method {} not supported yet.".format(method))
             targets = [target.to(device) for target in targets]
 
-        loss_dict = model(images, targets)
-        losses = sum(loss for loss in loss_dict.values())
+        loss_dict = model(images, targets) # {'loss_cls': tensor(0.3368, device='cuda:0', grad_fn=<DivBackward0>), 'loss_reg': tensor(0.2650, device='cuda:0', grad_fn=<DivBackward0>), 'loss_centerness': tensor(0.6142, device='cuda:0', grad_fn=<DivBackward0>), 'loss_stft_cls': tensor(0.2253, device='cuda:0', grad_fn=<DivBackward0>), 'loss_stft_reg': tensor(1.5633, device='cuda:0', grad_fn=<DivBackward0>)}
+        losses = sum(loss for loss in loss_dict.values()) # tensor(3.0046, device='cuda:0', grad_fn=<AddBackward0>)
 
         # reduce losses over all GPUs for logging purposes
-        loss_dict_reduced = reduce_loss_dict(loss_dict)
-        losses_reduced = sum(loss for loss in loss_dict_reduced.values())
+        loss_dict_reduced = reduce_loss_dict(loss_dict) # {'loss_cls': tensor(0.3368, device='cuda:0', grad_fn=<DivBackward0>), 'loss_reg': tensor(0.2650, device='cuda:0', grad_fn=<DivBackward0>), 'loss_centerness': tensor(0.6142, device='cuda:0', grad_fn=<DivBackward0>), 'loss_stft_cls': tensor(0.2253, device='cuda:0', grad_fn=<DivBackward0>), 'loss_stft_reg': tensor(1.5633, device='cuda:0', grad_fn=<DivBackward0>)}
+        losses_reduced = sum(loss for loss in loss_dict_reduced.values()) # tensor(3.0046, device='cuda:0', grad_fn=<AddBackward0>)
         meters.update(loss=losses_reduced, **loss_dict_reduced)
 
         optimizer.zero_grad()
