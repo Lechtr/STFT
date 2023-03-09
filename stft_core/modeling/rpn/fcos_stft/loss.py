@@ -34,14 +34,14 @@ def sigmoid_focal_loss(
     # torchvision.ops.sigmoid_focal_loss()
 
     # original version
-    # p = torch.sigmoid(inputs) # 0.001 *: 6.8632  6.1936,  4.8491  4.5029,  4.8197  4.4600,  4.7265  4.3510,  4.5760  4.2027,  4.4253  4.0652,  4.3252  3.9723,  4.2739  3.9225,  4.2524  3.9001,  4.2444  3.8901
+    p = torch.sigmoid(inputs) # 0.001 *: 6.8632  6.1936,  4.8491  4.5029,  4.8197  4.4600,  4.7265  4.3510,  4.5760  4.2027,  4.4253  4.0652,  4.3252  3.9723,  4.2739  3.9225,  4.2524  3.9001,  4.2444  3.8901
     # ce_loss = F.binary_cross_entropy_with_logits(
     #     inputs, targets, reduction="none"
-    ) # 0.001 *: 6.8398  6.1745, 4.8374  4.4927, 4.8081  4.4501, 4.7155  4.3415, 4.5655  4.1939, 4.4154  4.0570, 4.3159  3.9643, 4.2648  3.9148, 4.2434  3.8924, 4.2353  3.8826
+    # ) # 0.001 *: 6.8398  6.1745, 4.8374  4.4927, 4.8081  4.4501, 4.7155  4.3415, 4.5655  4.1939, 4.4154  4.0570, 4.3159  3.9643, 4.2648  3.9148, 4.2434  3.8924, 4.2353  3.8826
 
     # multiclass loss
     # computes better with targets as int of class 0, 1 or 2 instead of one-hot-encoded
-    CrossEntropyLoss(inputs, targets, reduction="none")
+    ce_loss = CrossEntropyLoss(inputs, targets, reduction="none")
 
 
     p_t = p * targets + (1 - p) * (1 - targets) # 0.9932  0.9938, 0.9952  0.9955, 0.9952  0.9955, 0.9953  0.9957, 0.9954  0.9958, 0.9956  0.9959, 0.9957  0.9960, 0.9957  0.9961, 0.9958  0.9961, 0.9958  0.9961
@@ -538,7 +538,7 @@ class STFTFCOSLossComputation(object):
             reduction="sum",
         ) / num_foreground_stft
 
-        if foreground_idxs_stft.numel() > 0 # 16289
+        if foreground_idxs_stft.numel() > 0: # 16289
             loss_stft_reg = (
                 smooth_l1_loss(
                     stft_shift_deltas[foreground_idxs_stft],
