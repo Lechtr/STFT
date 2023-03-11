@@ -57,9 +57,9 @@ def sigmoid_focal_loss(
 
     return loss # 2.49932
 
-sigmoid_focal_loss_jit = torch.jit.script(
-    sigmoid_focal_loss
-)  # type: torch.jit.ScriptModule
+# sigmoid_focal_loss_jit = torch.jit.script(
+#     sigmoid_focal_loss
+# )  # type: torch.jit.ScriptModule
 
 def iou_loss(inputs, targets, weight=None, box_mode="xyxy", loss_type="iou", reduction="none"):
     """
@@ -473,7 +473,7 @@ class STFTFCOSLossComputation(object):
         # gt_classes_target[foreground_idxs, gt_classes[foreground_idxs]-1] = 1
 
         # Integer-Class_index statt one-hot-encoded
-        gt_classes_target = torch.zeros(pred_class_logits.shape[0])  # torch.Size([17064, 2])
+        gt_classes_target = torch.zeros(pred_class_logits.shape[0], device='cuda:0').long()  # torch.Size([17064])
         gt_classes_target[foreground_idxs] = gt_classes[foreground_idxs] -1
 
         num_gpus = get_num_gpus()
@@ -481,7 +481,7 @@ class STFTFCOSLossComputation(object):
         acc_centerness_num_avg_per_gpu = max(reduce_sum(acc_centerness_num).item() / float(num_gpus), 1.0)
 
         # logits loss
-        loss_cls = sigmoid_focal_loss_jit(
+        loss_cls = sigmoid_focal_loss(
             pred_class_logits[valid_idxs], # tensor([[-4.8728, -5.1408],
                                             # [-5.2613, -5.5084],
                                             # [-5.2732, -5.5276],
@@ -527,10 +527,10 @@ class STFTFCOSLossComputation(object):
         # stft_gt_classes_target[foreground_idxs_stft, stft_gt_classes[foreground_idxs_stft]-1] = 1
 
         # Integer-Class_index statt one-hot-encoded
-        stft_gt_classes_target = torch.zeros(stft_class_logits.shape[0])  # torch.Size([17064, 2])
+        stft_gt_classes_target = torch.zeros(stft_class_logits.shape[0], device='cuda:0').long()  # torch.Size([17064, 2])
         stft_gt_classes_target[foreground_idxs_stft] = stft_gt_classes[foreground_idxs_stft] - 1
 
-        loss_stft_cls = sigmoid_focal_loss_jit(
+        loss_stft_cls = sigmoid_focal_loss(
             stft_class_logits[valid_idxs_stft], # tensor([[-3.4625, -3.4591], [-3.3978, -3.4696], [-3.5369, -3.5909], ..., [-1.4151, -1.0552], [-1.6657, -1.3548], [-2.0824, -2.0467]], device='cuda:0', grad_fn=<IndexBackward>)
             stft_gt_classes_target[valid_idxs_stft], # tensor([[0., 0.], [0., 0.], [0., 0.], ..., [0., 1.], [0., 1.], [0., 0.]], device='cuda:0')
             alpha=self.focal_loss_alpha, # 0.25
