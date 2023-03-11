@@ -167,7 +167,7 @@ def make_fcos_stft_postprocessor(config):
     pre_nms_top_n = config.MODEL.FCOS.PRE_NMS_TOP_N
     nms_thresh = config.MODEL.FCOS.NMS_TH
     fpn_post_nms_top_n = config.TEST.DETECTIONS_PER_IMG
-    num_classes=config.MODEL.FCOS.NUM_CLASSES - 1
+    num_classes=config.MODEL.FCOS.NUM_CLASSES # - 1
     stft_bbox_std = config.MODEL.STFT.BBOX_STD
 
     box_selector = STFTFCOSPostProcessor(

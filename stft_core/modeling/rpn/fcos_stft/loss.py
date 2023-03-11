@@ -34,21 +34,50 @@ def sigmoid_focal_loss(
     # torchvision.ops.sigmoid_focal_loss()
 
     # original version
-    p = torch.sigmoid(inputs) # 0.001 *: 6.8632  6.1936,  4.8491  4.5029,  4.8197  4.4600,  4.7265  4.3510,  4.5760  4.2027,  4.4253  4.0652,  4.3252  3.9723,  4.2739  3.9225,  4.2524  3.9001,  4.2444  3.8901
+    # p = torch.sigmoid(inputs) # 0.001 *: 6.8632  6.1936,  4.8491  4.5029,  4.8197  4.4600,  4.7265  4.3510,  4.5760  4.2027,  4.4253  4.0652,  4.3252  3.9723,  4.2739  3.9225,  4.2524  3.9001,  4.2444  3.8901
     # ce_loss = F.binary_cross_entropy_with_logits(
     #     inputs, targets, reduction="none"
     # ) # 0.001 *: 6.8398  6.1745, 4.8374  4.4927, 4.8081  4.4501, 4.7155  4.3415, 4.5655  4.1939, 4.4154  4.0570, 4.3159  3.9643, 4.2648  3.9148, 4.2434  3.8924, 4.2353  3.8826
 
-    # multiclass loss
-    # computes better with targets as int of class 0, 1 or 2 instead of one-hot-encoded
-    ce_loss = CrossEntropyLoss(inputs, targets, reduction="none")
+    # p_t = p * targets + (1 - p) * (1 - targets) # 0.9932  0.9938, 0.9952  0.9955, 0.9952  0.9955, 0.9953  0.9957, 0.9954  0.9958, 0.9956  0.9959, 0.9957  0.9960, 0.9957  0.9961, 0.9958  0.9961, 0.9958  0.9961
+    # loss = ce_loss * ((1 - p_t) ** gamma) # 1e-07 *: 3.2108  2.3613, 1.1347  0.9089, 1.1142  0.8832, 1.0510  0.8201, 0.9538  0.7392, 0.8628  0.6691, 0.8057  0.6243, 0.7774  0.6011, 0.7657  0.5909, 0.7614  0.586,
 
 
-    p_t = p * targets + (1 - p) * (1 - targets) # 0.9932  0.9938, 0.9952  0.9955, 0.9952  0.9955, 0.9953  0.9957, 0.9954  0.9958, 0.9956  0.9959, 0.9957  0.9960, 0.9957  0.9961, 0.9958  0.9961, 0.9958  0.9961
-    loss = ce_loss * ((1 - p_t) ** gamma) # 1e-07 *: 3.2108  2.3613, 1.1347  0.9089, 1.1142  0.8832, 1.0510  0.8201, 0.9538  0.7392, 0.8628  0.6691, 0.8057  0.6243, 0.7774  0.6011, 0.7657  0.5909, 0.7614  0.586,
-    if alpha >= 0:
-        alpha_t = alpha * targets + (1 - alpha) * (1 - targets) # 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500
-        loss = alpha_t * loss # 1e-07 : ,3.1462  2.2038, 1.3251  0.9630, 1.2719  0.9041, 1.1880  0.8279, 1.0954  0.7552, 1.0236  0.7017, 0.9821  0.6673, 0.9632  0.6492, 0.9551  0.6386, 0.9479  0.6317
+
+
+
+
+    # Open AI multiclass focal loss
+    ce_loss_fct = CrossEntropyLoss(reduction="none")
+    ce_loss = ce_loss_fct(inputs, targets)
+    pt = torch.exp(-ce_loss)
+    loss = alpha * (1 - pt) ** gamma * ce_loss
+
+
+
+
+    # # oder einfach Focal weglassen und normal CE-Loss?
+    # ce_loss_fct = CrossEntropyLoss(reduction=reduction)
+    # loss = ce_loss_fct(inputs, targets)
+
+
+
+    # # multiclass loss
+    # https: // github.com / artemmavrin / focal - loss / blob / master / src / focal_loss / _categorical_focal_loss.py
+    # # computes better with targets as int of class 0, 1 or 2 instead of one-hot-encoded
+    # p = torch.softmax(inputs, dim=-1)
+    # ce_loss_fct = CrossEntropyLoss(reduction="none")
+    # ce_loss = ce_loss_fct(inputs, targets) # tensor([0.6330, 0.6373, 0.6357,  ..., 0.5051, 0.5082, 0.3116], device='cuda:0',grad_fn=<NllLossBackward>); torch.Size([16289])
+    #
+    # probs = torch.gather(p, -1, targets.unsqueeze(-1)).squeeze(-1) # tensor([0.6574, 0.6967, 0.6871,  ..., 0.7644, 0.7465, 0.6851], device='cuda:0',grad_fn=<SqueezeBackward1>) torch.Size([16289])
+    # loss = ce_loss * ((1 - probs) ** gamma)
+
+
+
+
+    # if alpha >= 0:
+    #     alpha_t = alpha * targets + (1 - alpha) * (1 - targets) # 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500, 0.7500  0.7500
+    #     loss = alpha_t * loss # 1e-07 : ,3.1462  2.2038, 1.3251  0.9630, 1.2719  0.9041, 1.1880  0.8279, 1.0954  0.7552, 1.0236  0.7017, 0.9821  0.6673, 0.9632  0.6492, 0.9551  0.6386, 0.9479  0.6317
 
     if reduction == "mean":
         loss = loss.mean()
@@ -259,7 +288,7 @@ class STFTFCOSLossComputation(object):
     This class computes the STFTFCOS losses.
     """
     def __init__(self, cfg):
-        self.num_classes = cfg.MODEL.FCOS.NUM_CLASSES - 1
+        self.num_classes = cfg.MODEL.FCOS.NUM_CLASSES # - 1
         self.fpn_strides = cfg.MODEL.FCOS.FPN_STRIDES
         self.object_sizes_of_interest = [
             [-1, 64],
@@ -474,7 +503,7 @@ class STFTFCOSLossComputation(object):
 
         # Integer-Class_index statt one-hot-encoded
         gt_classes_target = torch.zeros(pred_class_logits.shape[0], device='cuda:0').long()  # torch.Size([17064])
-        gt_classes_target[foreground_idxs] = gt_classes[foreground_idxs] -1
+        gt_classes_target[foreground_idxs] = gt_classes[foreground_idxs]
 
         num_gpus = get_num_gpus()
         num_foreground_avg_per_gpu = max(reduce_sum(num_foreground).item() / float(num_gpus), 1.0)
@@ -528,7 +557,7 @@ class STFTFCOSLossComputation(object):
 
         # Integer-Class_index statt one-hot-encoded
         stft_gt_classes_target = torch.zeros(stft_class_logits.shape[0], device='cuda:0').long()  # torch.Size([17064, 2])
-        stft_gt_classes_target[foreground_idxs_stft] = stft_gt_classes[foreground_idxs_stft] - 1
+        stft_gt_classes_target[foreground_idxs_stft] = stft_gt_classes[foreground_idxs_stft]
 
         loss_stft_cls = sigmoid_focal_loss(
             stft_class_logits[valid_idxs_stft], # tensor([[-3.4625, -3.4591], [-3.3978, -3.4696], [-3.5369, -3.5909], ..., [-1.4151, -1.0552], [-1.6657, -1.3548], [-2.0824, -2.0467]], device='cuda:0', grad_fn=<IndexBackward>)

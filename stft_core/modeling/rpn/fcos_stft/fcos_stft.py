@@ -48,7 +48,7 @@ class STFTFCOSHead(torch.nn.Module):
             in_channels (int): number of channels of the input feature
         """
         super(STFTFCOSHead, self).__init__()
-        num_classes = cfg.MODEL.FCOS.NUM_CLASSES - 1
+        num_classes = cfg.MODEL.FCOS.NUM_CLASSES # - 1
         self.fpn_strides = cfg.MODEL.FCOS.FPN_STRIDES
         self.norm_reg_targets = cfg.MODEL.FCOS.NORM_REG_TARGETS
         self.centerness_on_reg = cfg.MODEL.FCOS.CENTERNESS_ON_REG
