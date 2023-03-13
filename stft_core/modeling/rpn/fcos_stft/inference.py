@@ -1,4 +1,5 @@
 import torch
+from torch.nn import Softmax
 from torchvision.ops import boxes as box_ops
 from torchvision.ops import nms
 from stft_core.modeling.utils import cat
@@ -75,25 +76,51 @@ class STFTFCOSPostProcessor(torch.nn.Module):
         for shifts_i, box_cls_i, box_ctr_i, stft_box_cls_i, stft_box_reg_i, stft_based_box_i in zip(
                 shifts_per_image, box_cls, box_center, stft_box_cls, stft_box_delta, stft_based_box):
             # (HxWxK,)
-            box_cls_i = box_cls_i.sigmoid_()
-            box_ctr_i = box_ctr_i.sigmoid_()
-            stft_box_cls_i = stft_box_cls_i.sigmoid_()
+            # box_cls_i = box_cls_i.sigmoid_()
+            # box_ctr_i = box_ctr_i.sigmoid_()
+            # stft_box_cls_i = stft_box_cls_i.sigmoid_()
+
+            softm = Softmax(dim=1)
+            box_cls_i = softm(box_cls_i)
+            box_ctr_i = softm(box_ctr_i)
+            stft_box_cls_i = softm(stft_box_cls_i)
+
+
             
-            predicted_prob = (box_cls_i * box_ctr_i).sqrt()
+            predicted_prob = (box_cls_i * box_ctr_i).sqrt() # torch.Size([13400, 3])
             # filter out the proposals with low confidence score
-            keep_idxs = predicted_prob > self.pre_nms_thresh
+
+            # create bool tensor with at most one True per Row for the class with max value, ingoring the first column=backgorund class, hence the +1
+            predicted_prob_max_val, predicted_prob_max_idx = torch.max(predicted_prob[:, 1:], 1)
+            keep_idxs = torch.zeros_like(predicted_prob, dtype=bool)
+            keep_idxs[torch.arange(keep_idxs.size()[0]), predicted_prob_max_idx + 1] = predicted_prob_max_val > self.pre_nms_thresh
+            # keep_idxs = predicted_prob > self.pre_nms_thresh # torch.Size([13400, 3]) # tensor([[ True, False, False], [ True, False, False], [ True, False, False],
             predicted_prob = predicted_prob * stft_box_cls_i
-            predicted_prob = predicted_prob[keep_idxs]
+            predicted_prob = predicted_prob[keep_idxs] # torch.Size([26332])
             # Keep top k top scoring indices only.
-            num_topk = min(self.pre_nms_top_n, predicted_prob.size(0))
+            num_topk = min(self.pre_nms_top_n, predicted_prob.size(0)) # 1000
             # torch.sort is actually faster than .topk (at least on GPUs)
-            predicted_prob, topk_idxs = predicted_prob.sort(descending=True)
+            predicted_prob, topk_idxs = predicted_prob.sort(descending=True) # values=tensor([0.0469, 0.0437, 0.0437,  ..., 0.0001, 0.0001, 0.0001], device='cuda:0'), indices=tensor([  135, 19015, 18749,  ..., 19282, 18750, 19016], device='cuda:0'))
             topk_idxs = topk_idxs[:num_topk]
 
-            keep_idxs = keep_idxs.nonzero()
+            keep_idxs = keep_idxs.nonzero() #torch.Size([3350, 3]) transformiert zu torch.Size([6466, 2])
+            # tensor([[   0,    0],
+            #         [   1,    0],
+            #         [   2,    0],
+            #         ...,
+            #         [3347,    0],
+            #         [3348,    0],
+            #         [3349,    0]], device='cuda:0')
             keep_idxs = keep_idxs[topk_idxs]
-            keep_box_idxs = keep_idxs[:, 0]
-            classes_idxs = keep_idxs[:, 1] + 1
+            # tensor([[1673,    0],
+            #         [1606,    0],
+            #         [1740,    0],
+            #         ...,
+            #         [1880,    0],
+            #         [ 932,    0],
+            #         [3293,    0]], device='cuda:0')
+            keep_box_idxs = keep_idxs[:, 0] # tensor([1673, 1606, 1740, 1472, 1539, 1405, 1338, 1807, 1271, 1204,...
+            classes_idxs = keep_idxs[:, 1] # torch.Size([1000]); tensor([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 
             predicted_prob = predicted_prob[:num_topk]
             stft_box_reg_i = stft_box_reg_i[keep_box_idxs]
