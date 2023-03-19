@@ -91,7 +91,7 @@ class STFTFCOSPostProcessor(torch.nn.Module):
             # filter out the proposals with low confidence score
 
             # create bool tensor with at most one True per Row for the class with max value, ingoring the first column=backgorund class, hence the +1
-            predicted_prob_max_val, predicted_prob_max_idx = torch.max(predicted_prob[:, 1:], 1)
+            predicted_prob_max_val, predicted_prob_max_idx = torch.max(predicted_prob[:, 1:], dim=1)
             keep_idxs = torch.zeros_like(predicted_prob, dtype=bool)
             keep_idxs[torch.arange(keep_idxs.size()[0]), predicted_prob_max_idx + 1] = predicted_prob_max_val > self.pre_nms_thresh
             # keep_idxs = predicted_prob > self.pre_nms_thresh # torch.Size([13400, 3]) # tensor([[ True, False, False], [ True, False, False], [ True, False, False],
