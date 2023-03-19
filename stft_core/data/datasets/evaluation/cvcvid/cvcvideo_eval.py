@@ -49,14 +49,18 @@ def cvcvideo_detection_eval(pred_boxlists, gt_boxlists, score_thrs):
             # FN = gt ad, pred hp
             for polyp_in_image_index, gt in enumerate(gt_label):
                 # hp == 1; ad == 2
-                if gt == 2 and pred_label[polyp_in_image_index] == 2:
-                    detection_tp[idx, score_idx] += 1
-                elif gt == 1 and pred_label[polyp_in_image_index] == 2:
-                    detection_fp[idx, score_idx] += 1
-                elif gt == 1 and pred_label[polyp_in_image_index] == 1:
-                    detection_tn[idx, score_idx] += 1
-                elif gt == 2 and pred_label[polyp_in_image_index] == 1:
-                    detection_fn[idx, score_idx] += 1
+                if pred_label.shape[0]>0:
+                    if gt == 2 and pred_label[polyp_in_image_index] == 2:
+                        detection_tp[idx, score_idx] += 1
+                    elif gt == 1 and pred_label[polyp_in_image_index] == 2:
+                        detection_fp[idx, score_idx] += 1
+                    elif gt == 1 and pred_label[polyp_in_image_index] == 1:
+                        detection_tn[idx, score_idx] += 1
+                    elif gt == 2 and pred_label[polyp_in_image_index] == 1:
+                        detection_fn[idx, score_idx] += 1
+                # dass das model 0 predictions erzeugt sollte eig nicht passieren
+                else:
+                    breakpoint()
 
 
             # Boxen predicted
