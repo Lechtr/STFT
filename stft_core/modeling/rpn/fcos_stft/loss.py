@@ -511,11 +511,11 @@ class STFTFCOSLossComputation(object):
 
         # logits loss
         loss_cls = sigmoid_focal_loss(
-            pred_class_logits[valid_idxs], # tensor([[-4.8728, -5.1408],
+            pred_class_logits[foreground_idxs], # tensor([[-4.8728, -5.1408],
                                             # [-5.2613, -5.5084],
                                             # [-5.2732, -5.5276],
                                             # ...,
-            gt_classes_target[valid_idxs], # tensor([[0., 0.], # max is 1
+            gt_classes_target[foreground_idxs], # tensor([[0., 0.], # max is 1
                                             # [0., 0.],
                                             # [0., 0.],
                                             # ...,
@@ -560,8 +560,8 @@ class STFTFCOSLossComputation(object):
         stft_gt_classes_target[foreground_idxs_stft] = stft_gt_classes[foreground_idxs_stft]
 
         loss_stft_cls = sigmoid_focal_loss(
-            stft_class_logits[valid_idxs_stft], # tensor([[-3.4625, -3.4591], [-3.3978, -3.4696], [-3.5369, -3.5909], ..., [-1.4151, -1.0552], [-1.6657, -1.3548], [-2.0824, -2.0467]], device='cuda:0', grad_fn=<IndexBackward>)
-            stft_gt_classes_target[valid_idxs_stft], # tensor([[0., 0.], [0., 0.], [0., 0.], ..., [0., 1.], [0., 1.], [0., 0.]], device='cuda:0')
+            stft_class_logits[foreground_idxs_stft], # tensor([[-3.4625, -3.4591], [-3.3978, -3.4696], [-3.5369, -3.5909], ..., [-1.4151, -1.0552], [-1.6657, -1.3548], [-2.0824, -2.0467]], device='cuda:0', grad_fn=<IndexBackward>)
+            stft_gt_classes_target[foreground_idxs_stft], # tensor([[0., 0.], [0., 0.], [0., 0.], ..., [0., 1.], [0., 1.], [0., 0.]], device='cuda:0')
             alpha=self.focal_loss_alpha, # 0.25
             gamma=self.focal_loss_gamma, # 2.0
             reduction="sum",
