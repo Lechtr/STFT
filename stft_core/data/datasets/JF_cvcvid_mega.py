@@ -136,7 +136,7 @@ class JF_CVCVIDMEGADataset(JF_CVCVIDImageDataset):
         images["ref_g"] = img_refs_g
         images["frame_category"] = frame_category
         images["seg_len"] = self.frame_seg_len[idx]
-        images["frames_vidDir_and_filename_pattern"] = self.frames_vidDir_and_filename_pattern[idx]
+        images["pattern"] = self.frames_vidDir_and_filename_pattern[idx]
         images["img_dir"] = self._img_dir
         images["transforms"] = self.transforms
 
