@@ -94,7 +94,8 @@ class DatasetCatalog(object):
             "cvc_fgfa": "CVCVIDFGFADataset",
             "cvc_stft": "CVCVIDSTFTDataset",
             "JF_cvcvid_image": "JF_CVCVIDImageDataset",
-            "JF_cvcvid_stft": "JF_CVCVIDSTFTDataset"
+            "JF_cvcvid_stft": "JF_CVCVIDSTFTDataset",
+            "JF_cvc_mega": "JF_CVCVIDMEGADataset"
         }
         if ("DET" in name) or ("VID" in name) or ("Video" in name) or ("video" in name) or ("JF" in name):
             data_dir = DatasetCatalog.DATA_DIR

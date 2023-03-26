@@ -118,7 +118,7 @@ def build_roi_box_head(cfg, in_channels):
     and make it a parameter in the config
     """
     if cfg.MODEL.VID.ENABLE:
-        if cfg.MODEL.VID.METHOD in ("rdn", "mega", "cvc_mega", "cvc_rdn"):
+        if cfg.MODEL.VID.METHOD in ("rdn", "mega", "cvc_mega", "cvc_rdn", "JF_cvc_mega"):
             return ROIAttentionBoxHead(cfg, in_channels)
 
     return ROIBoxHead(cfg, in_channels)

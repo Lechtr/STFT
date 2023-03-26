@@ -271,7 +271,9 @@ def build_rpn(cfg, in_channels):
                      "cvc_image": RPNModule,
                      "cvc_fgfa": RPNModule,
                      "cvc_mega": RPNWithRefModule,
-                     "cvc_rdn": RPNWithRefModule}
+                     "cvc_rdn": RPNWithRefModule,
+                     "JF_cvc_mega": RPNWithRefModule
+                     }
         func = FUNC_DICT[cfg.MODEL.VID.METHOD]
         return func(cfg, in_channels)
 
