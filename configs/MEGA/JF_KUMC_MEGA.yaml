@@ -20,8 +20,8 @@ MODEL:
     FEATURE_EXTRACTOR: "MEGAFeatureExtractor"
     PREDICTOR: "FPNPredictor"
 DATASETS:
-  TRAIN: ("CVCVideo_train_videos",)
-  TEST: ("CVCVideo_val_videos",) #2484 frames, subdir in ['2','5','10','18']
+  TRAIN: ("JF_KUMC",)
+  TEST: ("JF_KUMC_VAL",) #2484 frames, subdir in ['2','5','10','18']
 SOLVER:
   BASE_LR: 0.0025
   WEIGHT_DECAY: 0.0001
