@@ -1,0 +1,25 @@
+# ninja log v5
+1	28965	1679942452140050607	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/BorderAlign_cuda.o	61122f923f48ba96
+0	43366	1679942466528592227	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cpu/ROIAlign_cpu.o	47e9b6550fb5a4d0
+1	43697	1679942466865628337	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cpu/nms_cpu.o	20a6db7dca5d417
+28997	54885	1679942478075829423	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/ROIAlign_cuda.o	babe0e25be65a058
+43373	71586	1679942494776605812	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/ROIPool_cuda.o	39be8c21f596ae97
+43780	71605	1679942494780606236	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/SigmoidFocalLoss_cuda.o	75f5507c75939543
+54960	83329	1679942506500849269	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_conv_cuda.o	ed77d2bd13b698bc
+71705	97513	1679942520698356826	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_pool_cuda.o	f9fa13ea8628536f
+71603	102422	1679942525608883220	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_conv_kernel_cuda.o	c1a4da63a00d797c
+83329	110560	1679942533751756113	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_pool_kernel_cuda.o	15b96f07707c4985
+97513	120228	1679942543418792392	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/nms.o	e968ef405bbd9dd8
+102500	137778	1679942560960671189	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/vision.o	7c7df7588cd0a8c9
+3	28735	1679942590871874051	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/BorderAlign_cuda.o	20d61ff42c385042
+3	44605	1679942606732572399	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cpu/ROIAlign_cpu.o	8b9a899b27a00f5
+3	45456	1679942607581663319	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cpu/nms_cpu.o	be3b724e5f07cb0c
+28764	54999	1679942617136686915	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/ROIAlign_cuda.o	1413417b2fc12241
+45553	70601	1679942632737358603	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/SigmoidFocalLoss_cuda.o	23c3de679fa01b99
+44646	70785	1679942632922378428	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/ROIPool_cuda.o	7cbfa4046b173fa1
+55086	83574	1679942645711748872	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_conv_cuda.o	20bedfba54409d4
+70871	98597	1679942660735358726	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_pool_cuda.o	b553a1de6ebefb8b
+70668	101204	1679942663341638001	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_conv_kernel_cuda.o	3bea885ae2f1824f
+83574	113347	1679942675473938038	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/deform_pool_kernel_cuda.o	6f2e96cc92e33eaa
+98597	120766	1679942682903734247	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/cuda/nms.o	b83f9fcbf129b164
+101224	137514	1679942699642528048	/content/STFT/build/temp.linux-x86_64-3.9/content/STFT/stft_core/csrc/vision.o	908b7fd260642423
