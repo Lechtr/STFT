@@ -60,7 +60,7 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True, meth
 
 def make_data_sampler(dataset, shuffle, distributed, method="base", is_train=True):
     if distributed:
-        if method in ("base", "cvc_image"):
+        if method in ("base", "cvc_image", "JF_cvc_image" ):
             return samplers.DistributedSampler(dataset, shuffle=shuffle)
         elif method in ("rdn", "mega", "fgfa", "stft", "cvc_fgfa", "cvc_mega", "cvc_rdn", "cvc_stft", "JF_cvcvid_stft", "JF_cvc_mega"):
             if is_train:

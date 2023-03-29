@@ -1,4 +1,7 @@
 MODEL:
+  CLS_AGNOSTIC_BBOX_REG: False
+  ROI_HEADS:
+    DETECTIONS_PER_IMG: 2
   VID:
     ENABLE: True
     METHOD: "JF_cvc_mega"
