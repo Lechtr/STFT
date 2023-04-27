@@ -1,6 +1,9 @@
 
 # STFT: Spatial-Temporal Feature Transformation
 
+forked for the Master Thesis "Diagnosis of Polyps with focus on video analysis"
+https://github.com/Lechtr/STFT
+
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 
 By [Lingyun Wu](https://scholar.google.com/citations?user=WmAYPtkAAAAJ&hl=en), [Zhiqiang Hu](https://scholar.google.com/citations?hl=en&user=n8E_lV8AAAAJ), [Yuanfeng Ji](https://scholar.google.com/citations?hl=en&user=7HGv1bkAAAAJ), [Ping Luo](http://luoping.me/), [Shaoting Zhang](https://scholar.google.com/citations?hl=en&user=oiBMWK4AAAAJ).
