@@ -24,7 +24,7 @@ class RetinaNetHead(torch.nn.Module):
         """
         super(RetinaNetHead, self).__init__()
         # TODO: Implement the sigmoid version first.
-        num_classes = cfg.MODEL.RETINANET.NUM_CLASSES - 1
+        num_classes = cfg.MODEL.RETINANET.NUM_CLASSES
         num_anchors = len(cfg.MODEL.RETINANET.ASPECT_RATIOS) \
                         * cfg.MODEL.RETINANET.SCALES_PER_OCTAVE
 
